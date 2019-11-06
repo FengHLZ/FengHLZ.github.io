@@ -1,0 +1,7 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(#7f658c, #34363f);
+}

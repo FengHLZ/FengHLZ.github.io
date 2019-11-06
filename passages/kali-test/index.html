@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>kali_web_test | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,kali,">
+  
+
+  
+  <meta name="description" content="FengHLZ的小站">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-01-01
+    </span>
+    
+      <span>
+        | <a href="/categories/渗透测试/"><i class="fa fa-bookmark"></i>渗透测试</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    kali_web_test
+  </h1>
+  
+  <article class="passage-article">
+    <p>2019年，占个位置慢慢写</p>
+<blockquote>
+<p>未完待续。。。</p>
+</blockquote>
+<h2 id="一-配置"><a href="#一-配置" class="headerlink" title="一 配置"></a>一 配置</h2><h3 id="1-1-kali主机IP：192-168-91-128"><a href="#1-1-kali主机IP：192-168-91-128" class="headerlink" title="1.1 kali主机IP：192.168.91.128"></a>1.1 kali主机IP：192.168.91.128</h3><p><img src="./kaili_ip.png" alt></p>
+<h3 id="1-2-漏洞服务器IP：192-168-91-130"><a href="#1-2-漏洞服务器IP：192-168-91-130" class="headerlink" title="1.2 漏洞服务器IP：192.168.91.130"></a>1.2 漏洞服务器IP：192.168.91.130</h3><p><img src="./owasp_ip.png" alt></p>
+<p>ping一下：<br><img src="./ping.png" alt></p>
+<p>浏览器访问：<br><img src="./靶机搭建成功.png" alt></p>
+<p><strong>大功告成</strong></p>
+<h2 id="二-侦察"><a href="#二-侦察" class="headerlink" title="二. 侦察"></a>二. 侦察</h2><p>在每个渗透测试中，无论对于网络还是Web应用，都有一套流程。其中需要完成一些步骤，来增加我们发现和利用每个影响我们目标的可能的漏洞的机会。例如：</p>
+<blockquote>
+<ul>
+<li>侦察</li>
+<li>枚举</li>
+<li>利用</li>
+<li>维持访问</li>
+<li>清理踪迹</li>
+</ul>
+</blockquote>
+<p>侦查是一个层面，其中测试者必须识别网络、防火墙和入侵检测系统中所有可能组件。它们也会收集关于公司、网络和雇员的最大信息。在我们的例子中，对于Web应用渗透测试，这个阶段主要关于了解应用、数据库、用户、服务器以及应用和我们之间的关系。</p>
+<p>侦查是每个渗透测试中的必要阶段。我们得到了的目标信息越多，发现和利用漏洞时，我们拥有的选项就越多。</p>
+<hr>
+<h3 id="2-1-Nmap使用"><a href="#2-1-Nmap使用" class="headerlink" title="2.1 Nmap使用"></a>2.1 Nmap使用</h3><p>Nmap 可能是世界上最广泛使用的端口扫描器。他可以用于识别活动主机、扫描 TCP和UDP 开放端口，检测防火墙，获得运行在远程主机上的服务版本，甚至是，可以使用脚本来发现和利用漏洞。</p>
+<h4 id="2-1-1-操作步骤"><a href="#2-1-1-操作步骤" class="headerlink" title="2.1.1 操作步骤"></a>2.1.1 操作步骤</h4><ul>
+<li><strong>查看服务器是否响应</strong></li>
+</ul>
+<blockquote>
+<p><strong>nmap -sn 192.168.91.130</strong></p>
+</blockquote>
+<p><img src="./nmap1.png" alt></p>
+<ul>
+<li><strong>查看打开的端口</strong></li>
+</ul>
+<blockquote>
+<p><strong>nmap 192.168.91.130</strong></p>
+</blockquote>
+<p><img src="./nmap2.png" alt></p>
+<ul>
+<li><strong>让 Nmap 向服务器询问正在运行的服务的版本，并且基于它猜测操作系统</strong></li>
+</ul>
+<blockquote>
+<p><strong>map -sV -O 192.168.91.130</strong></p>
+</blockquote>
+<p><img src="./nmap3.png" alt></p>
+<p><strong>可以看到漏洞服务器使用Apache2.2.14的Web服务器；PHP使用的版本是5.3.2；使用的是Linux2.6的内核。</strong></p>
+<h4 id="2-1-2-工作原理"><a href="#2-1-2-工作原理" class="headerlink" title="2.1.2 工作原理"></a>2.1.2 工作原理</h4><p>Nmap 是个端口扫描器，这意味着它可以向一些指定IP的TCP或UDP端口发送<strong>封包</strong>，并<strong>检查是否有响应</strong>。如果有的话，这意味着端口是打开的，因此，端口上运行着服务。</p>
+<p>在第一个名中，使用-sn参数，我们让Nmap只检查是否服务器响应ICMP请求（或ping）。我们的服务器响应了，所以它是活动的。</p>
+<p>第二个命令是调用 Nmap的最简方式，它只指定目标IP。所做的事情是先ping服务器，如果它响应了，Nmap 会向1000个TCP端口列表发送<strong>探针</strong>，来观察哪个端口响应，之后报告响应端口的结果。</p>
+<p>第三个命令向第二个添加了如下两个任务：</p>
+<blockquote>
+<ul>
+<li>-sV 请求每个被发现的开放端口的标识（头部或者自我识别），这是它用作版本的东西。</li>
+<li>-O 告诉 Nmap，尝试猜测运行在目标上的操作系统。使用开放端口和版本收集的信息。</li>
+</ul>
+</blockquote>
+<h4 id="2-1-3-其他参数"><a href="#2-1-3-其他参数" class="headerlink" title="2.1.3 其他参数"></a>2.1.3 其他参数</h4><ul>
+<li><p><code>-sT</code>：通常，在 root用户下运行Nmap时，它使用SYN扫描类型。使用这个参数，我们就强制让扫描器执行完全连接的扫描。它更慢，并且会在服务器的日志中留下记录，但是它不太可能被入侵检测系统检测到。</p>
+</li>
+<li><p><code>-Pn</code>：如果我们已经知道了主机是活动的或者不响应ping，我们可以使用这个参数告诉Nmap 跳过 ping 测试，并扫描所有指定目标，假设它们是开启的。</p>
+</li>
+<li><p><code>-v</code>：这会开启详细模式。Nmap会展示更多关于它所做事情和得到回复的信息。参数可以在相同命令中重复多次：次数越多，就越详细（也就是说，-vv或-v -v -v -v）。</p>
+</li>
+<li><p><code>-p N1,N2...Nn</code>：如果我们打算测试特定端口或一些非标准端口，我们可能想这个参数。N1到Nn是打算让 Nmap 扫描的端口。例如，要扫描端口21，80到90，和137，参数应为：-p 21,80-90,137。</p>
+</li>
+<li><p><code>--script=script_name</code>：Nmap包含很多实用的漏洞检测、扫描和识别、登录测试、命令执行、用户枚举以及其它脚本。使用这个参数来告诉Nmap在目标的开放端口上运行脚本。你可能打算查看一些 Nmap 脚本，它们在：<a href="https://nmap.org/nsedoc/scripts/。" target="_blank" rel="noopener">https://nmap.org/nsedoc/scripts/。</a></p>
+</li>
+</ul>
+<h3 id="2-2-识别-Web-应用防火墙"><a href="#2-2-识别-Web-应用防火墙" class="headerlink" title="2.2 识别 Web 应用防火墙"></a>2.2 识别 Web 应用防火墙</h3><p>Web 应用防火墙（WAF）是一个<code>设备或软件</code>，它可以检查发送到Web服务器的封包，以便识别和阻止可能的恶意封包，它们通常基于<strong>签名</strong>或<strong>正则表达式</strong>。</p>
+<p>如果未检测到的 WAF 阻止了我们的请求或者封禁了我们的IP，我们渗透测试中就要处理很多的麻烦。在执行渗透测试的时候，侦查层面必须包含检测和是否被WAF，入侵检测系统（IDS），或者入侵阻止系统（IPS）。这是必须的，为了采取必要的手段来防止被阻拦或禁止。</p>
+<h4 id="2-2-1-操作步骤"><a href="#2-2-1-操作步骤" class="headerlink" title="2.2.1 操作步骤"></a>2.2.1 操作步骤</h4><ol>
+<li><p>Nmap 包含了一些<strong>脚本</strong>，用于测试 WAF 的存在。在漏洞服务器上尝试它们：</p>
+<blockquote>
+<p>nmap -p 80,443 –script=http-waf-detect 192.168.56.102</p>
+</blockquote>
+<p> <img src="./nmap-waf-1.png" alt><br> 没检测到任何 WAF，漏洞服务器上没有任何WAF。</p>
+</li>
+<li><p>在真正拥有防火墙的服务器上尝试相同命令，使用<code>www.baidu.com</code>.</p>
+<blockquote>
+<p>nmap -p 80,443 –script=http-waf-detect <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
+</blockquote>
+<p> <img src="./nmap-waf-2.png" alt><br> 可以看到，80和443端口都配备有WAF。</p>
+</li>
+<li><p>另一个 Nmap 脚本，可以帮助我们识别所使用的设备，并更加精确。</p>
+<blockquote>
+<p>nmap -p 80,443 –script=http-waf-fingerprint <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
+</blockquote>
+</li>
+<li><p>另一个 Kali Linux 自带的工具可以帮助我们检测和是被 WAF，它叫做<code>waf00f</code>。</p>
+<blockquote>
+<p>waf00f <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a></p>
+</blockquote>
+<p> <img src="./nmap-waf-3.png" alt></p>
+</li>
+</ol>
+<h4 id="2-2-2-工作原理"><a href="#2-2-2-工作原理" class="headerlink" title="2.2.2 工作原理"></a>2.2.2 工作原理</h4><p>WAF 检测的原理是通过<strong>发送特定请求</strong>到服务器，之后<strong>分析响应</strong>。例如，在http-waf-detect的例子中，它发送了一些基本的恶意封包，并对比响应，同时查找封包被阻拦、拒绝或检测到的标识。http-waf-fingerprint也一样，但是这个脚本也尝试拦截响应，并根据已知的不同 IDS 和 WAF 的模式对其分类。wafw00f也是这样。</p>
+<h3 id="2-3-获取和修改-Cookie"><a href="#2-3-获取和修改-Cookie" class="headerlink" title="2.3 获取和修改 Cookie"></a>2.3 获取和修改 Cookie</h3><p>Cookie 是由服务器发送给浏览器（客户端）的小型信息片段，用于在本地储存一些信息，它们和特定用户相关。在现代Web应用中，Cookie用于储存用户特定的数据、例如主题颜色配置、对象排列偏好、上一个活动、以及（对我们更重要）会话标识符。</p>
+<h4 id="2-3-1-实验操作"><a href="#2-3-1-实验操作" class="headerlink" title="2.3.1 实验操作"></a>2.3.1 实验操作</h4><ol>
+<li><p>启动 Mantra ，在终端输入即可启动</p>
+<blockquote>
+<p>owasp-mantra-ff</p>
+</blockquote>
+</li>
+<li><p>从 Mantra 的菜单栏访问Tools | Application Auditing | Cookies Manager +<br> 浏览<a href="http://192.168.91.130/WackoPicko/" target="_blank" rel="noopener">http://192.168.91.130/WackoPicko/</a><br> <img src="./cookie-1.png" alt><br> 在这个截图中，我们可以从这个插件中看到所有该时刻储存的Cookie，以及所有它们所属的站点。我们也可以修改它们的值，删除它们以及添加新的条目。</p>
+</li>
+</ol>
+<h4 id="2-3-2-工作原理"><a href="#2-3-2-工作原理" class="headerlink" title="2.3.2 工作原理"></a>2.3.2 工作原理</h4><p><code>Cookies Manager+</code> 是个浏览器插件，允许我们<strong>查看</strong>、<strong>修改</strong>或<strong>删除</strong>现有的Cookie，以及<strong>添加新的条目</strong>。因为一些应用依赖于储存在这些Cookie中的值，<strong>攻击者可以使用它们来输入恶意的模式</strong>，可能会修改页面行为，或者<strong>提供伪造信息用于获取高阶权限</strong>。</p>
+<p>同时，在现代 Web 应用中，会话Cookie通常被使用，通常是登录完成之后的用户标识符的唯一兰苑。这会导致潜在的有效用户冒充，通过将Cookie值替换为某个活动会话的用户。</p>
+<h3 id="2-4-使用-DirBuster-发现文件和文件夹"><a href="#2-4-使用-DirBuster-发现文件和文件夹" class="headerlink" title="2.4 使用 DirBuster 发现文件和文件夹"></a>2.4 使用 DirBuster 发现文件和文件夹</h3><p><code>DirBuster</code> 是个工具，用于通过爆破来发现Web服务器中的现存文件和目录。<br>DirBuster在 kali 下自带字典的路径为</p>
+<blockquote>
+<p>/usr/share/dirbuster/wordlists/</p>
+</blockquote>
+<p><img src="./dirbster-dic.png" alt></p>
+<h4 id="2-4-1-实验操作"><a href="#2-4-1-实验操作" class="headerlink" title="2.4.1 实验操作"></a>2.4.1 实验操作</h4><p><img src="./dirbster-use.png" alt><br>如上图，<br>线程一般设置20；字典文件选择自带的即可；递归选项有时可以去点。</p>
+<h4 id="2-4-2-工作原理"><a href="#2-4-2-工作原理" class="headerlink" title="2.4.2 工作原理"></a>2.4.2 工作原理</h4><p>DirBuster 是个爬虫和爆破器的组合，<strong>它允许页面上的所有连接</strong>，<strong>同时尝试可能文件的不同名称</strong>。这些名称可以保存在文件中，类似于我们所使用的那个，或者可以由DirBuster 通过“纯粹暴力破解”选项，并为生成单词设置字符集和最小最大长度来自动生成。</p>
+<p>为了判断文件是否存在，DirBuster使用服务器生成的响应代码。最常见的响应在下面列出：</p>
+<ul>
+<li><p><code>200 OK</code>：文件存在并能够读取。</p>
+</li>
+<li><p><code>301 Moved permanently</code>：这是到给定 URL 的重定向。</p>
+</li>
+<li><p><code>401 Unauthorized</code>：需要权限来访问这个文件。</p>
+</li>
+<li><p><code>403 Forbidden</code>：请求有效但是服务器拒绝响应。</p>
+</li>
+<li><p><code>404 File not found</code>：文件不存在。</p>
+</li>
+</ul>
+<h3 id="2-5-使用-Cewl-分析密码"><a href="#2-5-使用-Cewl-分析密码" class="headerlink" title="2.5 使用 Cewl 分析密码"></a>2.5 使用 Cewl 分析密码</h3><p>cewl 通过<strong>爬行网站</strong>获取关键信息<strong>创建一个密码字典</strong></p>
+<p><strong>使用 CeWL 来获取应用所使用的单词列表</strong>。并保存它用于之后的登录页面暴力破解。</p>
+<h4 id="2-5-1-操作步骤"><a href="#2-5-1-操作步骤" class="headerlink" title="2.5.1 操作步骤"></a>2.5.1 操作步骤</h4><ol>
+<li><p>首先查看一下 cewl 的帮助文档，了解相关的选项<br> <img src="./cewl-h.png" alt></p>
+</li>
+<li><p>使用 cewl 来获得漏洞服务器中 <code>WackoPicko应用</code> 中的单词。长度最小为5 的单词，显示单词数量，将结果保存到cewl_WackoPicko.txt<br> <code>cewl -w cewl_WackoPicko.txt -c -m 5 http://192.168.91.130/WackoPicko/</code><br> <img src="./cewl-2.png" alt></p>
+</li>
+<li><p>查看结果<br> <img src="./cewl-3.png" alt><br> 这个列表仍然需要一些过滤来去掉数量多但是不可能用于密码的单词，例如“Services”，“Content”或者“information”。</p>
+</li>
+</ol>
+<h4 id="2-5-2-工作原理"><a href="#2-5-2-工作原理" class="headerlink" title="2.5.2 工作原理"></a>2.5.2 工作原理</h4><p>CeWL 是个 Kali 中的工具，<strong>爬取网站并提取独立单词的列表</strong>。它也可以提供每个单词的重复次数，保存结果到文件，使用页面的元数据以及其它。</p>
+<h4 id="2-5-3-其他相关工具"><a href="#2-5-3-其他相关工具" class="headerlink" title="2.5.3 其他相关工具"></a>2.5.3 其他相关工具</h4><p>其它工具也可用于类似目的，它们中的一些生成<strong>基于规则或其它单词列表</strong>的单词列表，另一些可以<strong>爬取网站来寻找最常用的单词</strong>。</p>
+<ul>
+<li>Crunch：这是<strong>基于由用户提供的字符集合</strong>的生成器。它使用这个集合来生成所有可能的组合。Crunch 包含在 Kali 中。</li>
+<li>Wordlist Maker (WLM)：WLM 能够<strong>基于字符集</strong>来生成单词列表，也能够<strong>从文本文件和网页中提取单词</strong>（<a href="http://www.pentestplus.co.uk/wlm.htm）。" target="_blank" rel="noopener">http://www.pentestplus.co.uk/wlm.htm）。</a></li>
+<li>Common User Password Profiler (CUPP)：这个工具可以<strong>使用单词列表</strong>来为常见的用户名分析可能的密码，以及<strong>从数据库下载单词列表和默认密码</strong>（<a href="https://github.com/Mebus/cupp）。" target="_blank" rel="noopener">https://github.com/Mebus/cupp）。</a></li>
+</ul>
+
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-配置"><span class="toc-text">一 配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-kali主机IP：192-168-91-128"><span class="toc-text">1.1 kali主机IP：192.168.91.128</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-漏洞服务器IP：192-168-91-130"><span class="toc-text">1.2 漏洞服务器IP：192.168.91.130</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-侦察"><span class="toc-text">二. 侦察</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Nmap使用"><span class="toc-text">2.1 Nmap使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-1-操作步骤"><span class="toc-text">2.1.1 操作步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-2-工作原理"><span class="toc-text">2.1.2 工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-3-其他参数"><span class="toc-text">2.1.3 其他参数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-识别-Web-应用防火墙"><span class="toc-text">2.2 识别 Web 应用防火墙</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-1-操作步骤"><span class="toc-text">2.2.1 操作步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-2-工作原理"><span class="toc-text">2.2.2 工作原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-获取和修改-Cookie"><span class="toc-text">2.3 获取和修改 Cookie</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-1-实验操作"><span class="toc-text">2.3.1 实验操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-2-工作原理"><span class="toc-text">2.3.2 工作原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-使用-DirBuster-发现文件和文件夹"><span class="toc-text">2.4 使用 DirBuster 发现文件和文件夹</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-1-实验操作"><span class="toc-text">2.4.1 实验操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-2-工作原理"><span class="toc-text">2.4.2 工作原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-使用-Cewl-分析密码"><span class="toc-text">2.5 使用 Cewl 分析密码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-1-操作步骤"><span class="toc-text">2.5.1 操作步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-2-工作原理"><span class="toc-text">2.5.2 工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-3-其他相关工具"><span class="toc-text">2.5.3 其他相关工具</span></a></li></ol></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">http://yoursite.com/passages/kali-test/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/kali/"><i class="fa fa-tags"></i>kali</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://godbmw.com/" target="_blank">GodBMW</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.liaoxuefeng.com/" target="_blank">廖雪峰的官方网站</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">系列教程</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://godbmw.com/leetcode/" target="_blank">Leetcode解题报告</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://segmentfault.com/markdown" target="_blank">Markdown语法手册</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://godbmw.com/passages/2019-03-03-theme-ad-docs-zh/" target="_blank">Theme Art Design 中文文档</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">书签</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://leancloud.cn/" target="_blank">LeanCloud</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.csdn.net/skykingf/article/details/50498808" target="_blank">Win10下 sublime + xdebug 调试php</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="http://www.mdtr2pdf.com/index.html" target="_blank">MDtr2PDF</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https:/godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/passages/H5-CSS-JS-game/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/welcome/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
