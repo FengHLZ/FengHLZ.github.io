@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>Shodan系统学习笔记 | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,">
+  
+
+  
+  <meta name="description" content="很早就见识过Shodan的威力这篇文章就系统总结一下Shodan的使用">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-11-24
+    </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Shodan系统学习笔记
+  </h1>
+  
+  <article class="passage-article">
+    <p>昨天Shodan十周年庆，当天购买永久会员只要1刀！<br>祝Shodan越做越好！</p>
+<h2 id="Shodan是什么"><a href="#Shodan是什么" class="headerlink" title="Shodan是什么"></a>Shodan是什么</h2><blockquote>
+<p>是一款特殊的<strong>搜索引擎</strong>，并不只单单针对Web中的各类html数据进行爬取。Shodan 是基于<strong>各类在线网络设备的banner</strong>进行全网搜索。<br>其中 Shodan 上最受欢迎的搜索内容是：webcam，linksys，cisco，netgear，SCADA等等。</p>
+</blockquote>
+<h2 id="我们可以利用Shodan来干什么"><a href="#我们可以利用Shodan来干什么" class="headerlink" title="我们可以利用Shodan来干什么"></a>我们可以利用Shodan来干什么</h2><blockquote>
+<ol>
+<li>利用 0day 实施大规模批量入侵，<strong>前提是不要把自己的0day撞到别人的蜜罐里面去了,否则就可惜了</strong></li>
+<li><strong>全网批量统计</strong>所有感染有某一数据特征的后门，可以专门用来检测某种定向攻击</li>
+<li><strong>批量扫描</strong>各种中间件的高危错误配置及能被远程利用的各类已知漏洞，也就是说完全可以把它当成一个高级的漏洞扫描器来用</li>
+<li>批量探测各种<strong>弱口令</strong></li>
+<li>批量<strong>抓各种shell</strong> [ 不仅限于webshell，backdoor]等等……</li>
+</ol>
+</blockquote>
+<h2 id="Shodan-语法"><a href="#Shodan-语法" class="headerlink" title="Shodan 语法"></a>Shodan 语法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">city：   	城市，只支持英文，而且不是能是简称。如TOKYO,Hong Kong,Seoul...</span><br><span class="line">country：  	指定国家或地区后缀，比如:cn,us,jp,tw,br,ph,vn,hk...</span><br><span class="line">hostname： 	指定主机名，其实就是目标域名[域名如果是子域还需要在前面加个.]</span><br><span class="line">net：      	指定网络范围，可以是单个ip或者cidr格式的ip段</span><br><span class="line">os：   		指定操作系统 centOS,win32,red hat,suse 等...</span><br><span class="line">port：  		指定端口，HTTP (80),FTP (21),SSH (22),SNMP (161),SIP (5060)等...</span><br><span class="line">product：  	指定具体的产品名称,如,各类操作系统/软件/平台/web服务器,数据库服务器,网络设备名称等...</span><br><span class="line">org：       搜索指定的组织或公司，例如 org:&quot;google&quot;</span><br><span class="line">isp：       搜索指定的ISP供应商，例如 isp:&quot;China Telecom&quot;</span><br><span class="line">version：   搜索指定的软件版本，例如 version:&quot;1.6.2&quot;</span><br><span class="line">geo：       搜索指定的地理位置，参数为经纬度，例如 geo:&quot;31.8639, 117.2808&quot;</span><br><span class="line">before/after：搜索指定收录时间前后的数据，格式为dd-mm-yy，例如 before:&quot;11-11-15&quot;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h2 id="Shodan官网界面介绍"><a href="#Shodan官网界面介绍" class="headerlink" title="Shodan官网界面介绍"></a>Shodan官网界面介绍</h2><p>比如我搜索“SSH”：</p>
+<p><img src="1.png" alt><br><img src="2.png" alt></p>
+<p><strong>左侧</strong>是大量的汇总数据包括：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Results map – 搜索结果展示地图</span><br><span class="line">Top services (Ports) – 使用最多的服务/端口</span><br><span class="line">Top organizations (ISPs) – 使用最多的组织/ISP</span><br><span class="line">Top operating systems – 使用最多的操作系统</span><br><span class="line">Top products (Software name) – 使用最多的产品/软件名称</span><br></pre></td></tr></table></figure></p>
+<p><strong>中间</strong>的主页面我们可以看到包含如下的搜索结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">IP 地址</span><br><span class="line">主机名</span><br><span class="line">ISP</span><br><span class="line">该条目的收录收录时间</span><br><span class="line">该主机位于的国家</span><br><span class="line">Banner 信息</span><br></pre></td></tr></table></figure></p>
+<p>想要了解每个条目的具体信息，只需要点击每个IP。此时，URL 会变成这种格式<code>https://www.shodan.io/host/[IP]</code>，所以我们也可以通过直接访问指定的 IP 来查看详细信息。</p>
+<p><img src="3.png" alt></p>
+<p>上图中我们可以从<strong>顶部</strong>在地图中看到主机的物理地址，从<strong>左侧</strong>了解到主机的相关信息，<strong>右侧</strong>则包含目标主机的端口列表及其详细信息。</p>
+<h2 id="一些简单的搜索实例"><a href="#一些简单的搜索实例" class="headerlink" title="一些简单的搜索实例"></a>一些简单的搜索实例</h2><hr>
+<p>搜集某个城市的特定设备 [这里暂以不同类型的web服务器为例] 标识 [自己可以事先多收集一些常见的软件和设备标识]:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Microsoft-IIS/5.0 city:&quot;TOKYO&quot;   可逐个尝试能否直接写shell</span><br><span class="line">Microsoft-IIS/6.0 city:&quot;Seoul&quot;	 可逐个尝试能否直接 RCE</span><br><span class="line">Microsoft-IIS/7.5 city:&quot;Hong Kong&quot; </span><br><span class="line">apache city:&quot;Nagoya&quot; </span><br><span class="line">Apache/2.2.27 city:&quot;Nagoya&quot;</span><br><span class="line">Tomcat city:&quot;Seoul&quot;	可逐个尝试能否直接 RCE</span><br><span class="line">cisco city:&quot;Osaka&quot;</span><br><span class="line">tplink city:&quot;nanjing&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜索特定版本的操作系统及端口:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">os:&quot;linux&quot; net:&quot;72.34.62.0/24&quot;</span><br><span class="line">os:&quot;windows&quot; net:&quot;195.40.91.0/24&quot;</span><br><span class="line">Apache city:&quot;Hong Kong&quot; port:&quot;8080&quot;  product:&quot;Apache Tomcat/Coyote JSP engine&quot;</span><br><span class="line">Apache city:&quot;Seoul&quot; port:&quot;8080&quot;</span><br><span class="line">hostname:&quot;.polyu.edu.hk&quot; os:&quot;windows&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜索指定国家地域特定类型的工具服务 (还是那句话,多搜集一些高质量的工具banner):<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">product:&quot;tomcat&quot;  net:&quot;158.132.18.0/24&quot;</span><br><span class="line">product:&quot;apache&quot;  net:&quot;158.132.18.0/24&quot;</span><br><span class="line">product:&quot;iis&quot;     net:&quot;158.132.18.0/24&quot;</span><br><span class="line">port:&quot;8080&quot; jboss country:CN</span><br><span class="line">port:&quot;8080&quot; jboss country:IN</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>扫描指定网段内的所有特定数据库服务器:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">product:&quot;Mysql&quot;  net:&quot;140.117.13.0/24&quot; port:&quot;3306&quot;</span><br><span class="line">port:&quot;1433&quot; net:&quot;78.131.197.0/24&quot;</span><br><span class="line">port:&quot;5432&quot; net:&quot;77.55.149.0/24&quot;</span><br><span class="line">port:&quot;1521&quot; net:&quot;78.143.192.0/12&quot;</span><br><span class="line">port:&quot;1521&quot; city:&quot;Osaka&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜索特定远程管理终端端口:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">os:&quot;windows&quot; port:&quot;3389&quot; net:&quot;107.160.1.0/24&quot;</span><br><span class="line">os:&quot;linux&quot; port:&quot;22&quot; net:&quot;107.160.1.0/24&quot;</span><br><span class="line">os:&quot;linux&quot; port:&quot;23&quot; net:&quot;107.160.1.0/24&quot;</span><br><span class="line">os:&quot;linux&quot; port:&quot;23&quot; net:&quot;87.124.0.0/15&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜索ftp / tftp :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">port:&quot;21&quot; net:&quot;107.160.1.0/24&quot;</span><br><span class="line">port:&quot;69&quot; net:&quot;218.242.16.0/24&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>在某个城市中搜索指定的端口,操作系统及在线网络设备:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">city:&quot;Hong Kong&quot; port:&quot;69&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; port:&quot;3389&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; port:&quot;22&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; port:&quot;23&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; port:&quot;3306&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; port:&quot;110&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; os:&quot;windows&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; product:&quot;cisco&quot;</span><br><span class="line">city:&quot;Hong Kong&quot; port:&quot;8080&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜索指定国家的特定设备,端口,服务器:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">port:&quot;23&quot; country:CN</span><br><span class="line">port:&quot;1433&quot; country:CN</span><br><span class="line">port:&quot;3389&quot; country:CN</span><br><span class="line">tplink country:CN</span><br><span class="line">huawei country:CN</span><br><span class="line">netcam  country:CN</span><br><span class="line">country:CN net:&quot;115.225.113.0/24&quot; port:&quot;22&quot;</span><br><span class="line">country:CN router</span><br><span class="line">admin login  country:HK</span><br><span class="line">hacked by country:HK</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜缺省密码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;default password&quot; city:&quot;Hong Kong&quot;</span><br><span class="line">country:CN &quot;default password&quot;</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>搜索各类漏洞摄像头:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netcam net:&quot;187.189.82.0/24&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="常见设备的默认用户名密码，可以尝试撞撞运气"><a href="#常见设备的默认用户名密码，可以尝试撞撞运气" class="headerlink" title="常见设备的默认用户名密码，可以尝试撞撞运气"></a>常见设备的默认用户名密码，可以尝试撞撞运气</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ACTi: admin/123456 or Admin/123456</span><br><span class="line">Axis (traditional): root/pass,</span><br><span class="line">Axis (new): requires password creation during first login</span><br><span class="line">Cisco: No default password, requires creation during first login</span><br><span class="line">Grandstream: admin/admin</span><br><span class="line">IQinVision: root/system</span><br><span class="line">Mobotix: admin/meinsm</span><br><span class="line">Panasonic: admin/12345</span><br><span class="line">Samsung Electronics: root/root or admin/4321</span><br><span class="line">Samsung Techwin (old): admin/1111111</span><br><span class="line">Samsung Techwin (new): admin/4321</span><br><span class="line">Sony: admin/admin</span><br><span class="line">TRENDnet: admin/admin</span><br><span class="line">Toshiba: root/ikwd</span><br><span class="line">Vivotek: root/&lt;blank&gt;</span><br><span class="line">WebcamXP: admin/ &lt;blank&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="别人的一点小结"><a href="#别人的一点小结" class="headerlink" title="别人的一点小结"></a>别人的一点小结</h2><ul>
+<li><a href="https://www.zoomeye.org/" target="_blank" rel="noopener">https://www.zoomeye.org/</a>   知道创宇的钟馗之眼，基于shodan实现</li>
+<li>完全手工的话,确实挺累的,为什么不写成<strong>自动化的脚本</strong>来帮我们完成呢。很多现成的优秀脚本是我们学习的来源</li>
+<li>在写脚本之前,自己首先要能熟练使用才是,这样写出来的工具杀伤力才能更大些</li>
+<li>用这些搜索引擎的时候,最好全程挂上vpn,<strong>推荐美国的</strong>,原因大家应该都明白,自家人对自家人的限制几乎是最少的</li>
+</ul>
+<h2 id="利用MSF-Shadon搜索网络摄像头"><a href="#利用MSF-Shadon搜索网络摄像头" class="headerlink" title="利用MSF+Shadon搜索网络摄像头"></a>利用MSF+Shadon搜索网络摄像头</h2><p>看到一个好玩的，玩一下。</p>
+<p>MSF我一直很喜欢~</p>
+<p><code>auxiliary/gather/shodan_search</code>模块：</p>
+<p><img src="4.png" alt></p>
+<p><code>SHODAN_APIKEY</code>从官网看；<br><code>QUERY</code>查询的设备为<code>webcamxp</code></p>
+<p>运行：<br><img src="5.png" alt></p>
+<p>随便点几个看看：</p>
+<p><img src="6.png" alt><br>大叔肚子有点大啊。。</p>
+<p><img src="7.png" alt><br>貌似监控某个设备</p>
+<p><img src="8.png" alt><br>实验室的设备？？</p>
+<p><img src="9.png" alt><br>嘿嘿，居住区了</p>
+<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://www.iyunv.com/thread-392144-1-1.html" target="_blank" rel="noopener">https://www.iyunv.com/thread-392144-1-1.html</a></p>
+<p><a href="https://klionsec.github.io/2014/12/15/shodan-hacking/" target="_blank" rel="noopener">熟练利用 shodan hacking 辅助我们快速渗透[ 大中型目标 ]</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU5MjMwNDYxNw==&amp;mid=2247483657&amp;idx=1&amp;sn=f9de9948f4255ecea6f75f7060418a4a&amp;chksm=fe20818fc9570899cd7fa0eb24e90db5c7a3cdbcee69ffef589c3c7e76e7c99be0c708ed5115&amp;mpshare=1&amp;scene=23&amp;srcid=1118FG5Hd7otDeHSb4c6j8LP&amp;sharer_sharetime=1574008055044&amp;sharer_shareid=3291101a2a6d966b2b8feb2b3fde94bf#rd" target="_blank" rel="noopener">利用MSF+Shadon搜索网络摄像头</a></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shodan是什么"><span class="toc-text">Shodan是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#我们可以利用Shodan来干什么"><span class="toc-text">我们可以利用Shodan来干什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shodan-语法"><span class="toc-text">Shodan 语法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shodan官网界面介绍"><span class="toc-text">Shodan官网界面介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一些简单的搜索实例"><span class="toc-text">一些简单的搜索实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见设备的默认用户名密码，可以尝试撞撞运气"><span class="toc-text">常见设备的默认用户名密码，可以尝试撞撞运气</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#别人的一点小结"><span class="toc-text">别人的一点小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用MSF-Shadon搜索网络摄像头"><span class="toc-text">利用MSF+Shadon搜索网络摄像头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-text">参考链接</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2019-11-24-Shodan系统学习笔记/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/渗透测试/"><i class="fa fa-tags"></i>渗透测试</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://godbmw.com/" target="_blank">GodBMW</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.liaoxuefeng.com/" target="_blank">廖雪峰的官方网站</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">系列教程</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://godbmw.com/leetcode/" target="_blank">Leetcode解题报告</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://segmentfault.com/markdown" target="_blank">Markdown语法手册</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://godbmw.com/passages/2019-03-03-theme-ad-docs-zh/" target="_blank">Theme Art Design 中文文档</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">书签</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://leancloud.cn/" target="_blank">LeanCloud</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://blog.csdn.net/skykingf/article/details/50498808" target="_blank">Win10下 sublime + xdebug 调试php</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="http://www.mdtr2pdf.com/index.html" target="_blank">MDtr2PDF</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https:/godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/phpstudy后门分析与复现/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
