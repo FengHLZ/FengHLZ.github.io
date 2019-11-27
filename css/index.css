@@ -863,3 +863,29 @@ main {
   margin-bottom: 30px; }
 
 /*# sourceMappingURL=index.css.map */
+
+#local-search-result{
+  background: white;
+  color:black;
+  opacity: .95;
+  width: 100%;
+  max-height: 600px;
+  overflow: auto;
+}
+
+.search-result{
+  max-height: 100%;
+  color: white;
+  overflow: hidden;
+  background-color: #455a64;
+}
+
+.search-result-title{
+  color: #0074e8;
+  font-weight:bold;
+  text-decoration:underline;
+}
+
+.search-keyword{
+  color: #f4511e;
+}
