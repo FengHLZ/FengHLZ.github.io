@@ -6,16 +6,16 @@
   <meta name="author" content="FengHLZ">
   
   
-  <title>归档: 2019/6 | xyz|All</title>
+  <title>快速将hackmd中的笔记迁移到博客 | xyz|All</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="Hexo, Theme-AD">
+    <meta name="keywords" content="随笔笔记,">
   
 
   
-  <meta name="description" content="FengHLZ的小站">
+  <meta name="description" content="平时记笔记会用hackmd，有时会用codimd（原因你懂的）将笔记迁移到博客最大的问题就是图片">
 
   
 
@@ -38,7 +38,7 @@
     welcome: {"enable":true,"interval":30},
     start_time: "2018-07-09",
     passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
-    is_post: false,
+    is_post: true,
     lock: false,
     author: "FengHLZ",
     share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
@@ -105,25 +105,83 @@
 </header>
 <div id="site-process"></div>
     <main>
-      <div class="timeline">
-  <h2 class="timeline-title">归档: 11篇</h2>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-11-28
+    </span>
+    
+      <span>
+        | <a href="/categories/随笔笔记/"><i class="fa fa-bookmark"></i>随笔笔记</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    快速将hackmd中的笔记迁移到博客
+  </h1>
   
-    
-      <h3 class="timeline-subtitle">2019</h3>
-    
-    <div class="timeline-item">
-      <time>2019-06-20</time>
-      <a target="_self" href="/passages/vulhub练习笔记/">vulhub练习笔记</a>
-    </div>
+  <article class="passage-article">
+    <h2 id="快速下载某个页面中的图片"><a href="#快速下载某个页面中的图片" class="headerlink" title="快速下载某个页面中的图片"></a>快速下载某个页面中的图片</h2><p>一开始准备直接将hackmd中的md文本直接复制过去，但是奈何图片资源是放在外网上面的。。</p>
+<p>于是想着将所有图片资源下载下来，存放在博客服务器上。</p>
+<h3 id="F12下的图片"><a href="#F12下的图片" class="headerlink" title="F12下的图片"></a>F12下的图片</h3><p>访问hackmd的某一篇文章：</p>
+<p><img src="Snipaste_2019-11-28_17-18-16.png" alt></p>
+<p>F12看下图片资源，同时过滤url：</p>
+<p><img src="Snipaste_2019-11-28_17-25-30.png" alt></p>
+<p>只能单个图片进行下载，不能选择全部再下载。。。苦辽</p>
+<h2 id="Firefox-Image-Picka插件"><a href="#Firefox-Image-Picka插件" class="headerlink" title="Firefox + Image Picka插件"></a>Firefox + Image Picka插件</h2><p>一开始并没有使用这个插件，想着写个python脚本爬一下目标url中的图片资源。但是用python进行request请求的时候还要挂socket5代理，索性放弃。</p>
+<p>后来找着了火狐浏览器下的一个插件，可以快速下载某个网页中出现的图片。</p>
+<p><img src="Snipaste_2019-11-28_18-50-30.png" alt></p>
+<p>如下图，在需要下载图片的网页打开插件，过滤一下图片的来源url，设置保存的文件名（为原文件名）</p>
+<p><img src="Snipaste_2019-11-28_18-53-15.png" alt></p>
+<p>如此，我就把需要的图片资源快速下载下来了：</p>
+<p><img src="Snipaste_2019-11-28_18-53-46.png" alt></p>
+<h2 id="使用文本编辑器删除一些字段"><a href="#使用文本编辑器删除一些字段" class="headerlink" title="使用文本编辑器删除一些字段"></a>使用文本编辑器删除一些字段</h2><p>我是使用sublime对粘贴好的md文件进行替换，将<code>https://i.imgur.com/</code>替换为<code>空</code>即可：</p>
+<p><img src="Snipaste_2019-11-28_19-02-05.png" alt></p>
+<p>至此，就已经改好了一篇markdown文件了（也就两步：<code>复制粘贴</code>、<code>替换</code>）</p>
+<h2 id="Next-to-Do"><a href="#Next-to-Do" class="headerlink" title="Next to Do"></a>Next to Do</h2><p>实验室主页中的文章（校赛wp等），是东海学长直接从hackmd复制粘贴过来的（hackmd编辑感觉超好！），不采取点手段就别想看到图片了。。</p>
+<p>抽个时间把图片全部放到主页所在的服务器上，再把文章修改一下即可~</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#快速下载某个页面中的图片"><span class="toc-text">快速下载某个页面中的图片</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#F12下的图片"><span class="toc-text">F12下的图片</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Firefox-Image-Picka插件"><span class="toc-text">Firefox + Image Picka插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用文本编辑器删除一些字段"><span class="toc-text">使用文本编辑器删除一些字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Next-to-Do"><span class="toc-text">Next to Do</span></a></li></ol>
+  </div>
+</aside>
   
-    
-    <div class="timeline-item">
-      <time>2019-06-12</time>
-      <a target="_self" href="/passages/2019-6-12-对本地三个MySQL数据库进行管理/">对本地三个MySQL数据库进行管理</a>
-    </div>
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2019-11-28-快速将hackmd中的笔记迁移到博客/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
   
 </div>
+
     </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
     
     <div class="site-footer-wrapper">
   <footer class="site-footer">
@@ -248,16 +306,16 @@
     <a href="javascript:void(0);" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="javascript:void(0);" data-enable="false">
+    <a href="/passages/2019-11-24-Shodan系统学习笔记/" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
   <div class="bottom-bar-right">
-    <a href="javascript:void(0);" data-enable="false" id="site-toc-show-btn">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
       <i class="fa fa-bars"></i>
     </a>
     
-      <a href="javascript:void(0);" data-enable="false">
+      <a href="#site-comment" data-enable="true">
         <i class="fa fa-commenting"></i>
       </a>
     

