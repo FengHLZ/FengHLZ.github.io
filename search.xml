@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>正则表达式调试工具及常用正则收集</title>
+      <link href="/passages/2020-1-18-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7%E5%8F%8A%E5%B8%B8%E7%94%A8%E6%AD%A3%E5%88%99%E6%94%B6%E9%9B%86/"/>
+      <url>/passages/2020-1-18-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%B0%83%E8%AF%95%E5%B7%A5%E5%85%B7%E5%8F%8A%E5%B8%B8%E7%94%A8%E6%AD%A3%E5%88%99%E6%94%B6%E9%9B%86/</url>
+      
+        <content type="html"><![CDATA[<p><img src="regexp.JPG" alt></p><a id="more"></a><blockquote><p>最近在审计代码的时候，总是遇到很多晦涩难懂的正则表达式</p><p>找了几个正则的调试工具、开发上常用的一些正则表达式</p></blockquote><h2 id="正则表达式调试工具"><a href="#正则表达式调试工具" class="headerlink" title="正则表达式调试工具"></a>正则表达式调试工具</h2><h3 id="regex101"><a href="#regex101" class="headerlink" title="regex101"></a>regex101</h3><p><a href="https://regex101.com/" target="_blank" rel="noopener">https://regex101.com/</a></p><p>非常实用丰富的正则调试工具，支持<code>PCRE(PHP)</code>、<code>ECMAScript(JavaScript)</code>、<code>Python</code>、<code>Golang</code>。</p><p><img src="1.png" alt></p><h3 id="debuggex"><a href="#debuggex" class="headerlink" title="debuggex"></a>debuggex</h3><p><a href="https://www.debuggex.com/" target="_blank" rel="noopener">https://www.debuggex.com/</a></p><p>特点：</p><ol><li>支持将正则表达式转化为自动机，并以图片显示自动机</li><li>能够实时更新自动机图片</li><li>支持输入待匹配字符串，良好的调试支持</li></ol><p><img src="2.png" alt></p><h3 id="regexper-和-Regulex"><a href="#regexper-和-Regulex" class="headerlink" title="regexper 和 Regulex"></a>regexper 和 Regulex</h3><p><a href="https://regexper.com/" target="_blank" rel="noopener">https://regexper.com/</a></p><p><a href="https://jex.im/regulex/" target="_blank" rel="noopener">https://jex.im/regulex/</a></p><p>支持将正则表达式转换为自动机，图片显示比较好看hh。</p><p><img src="3.png" alt></p><p><img src="4.png" alt></p><h2 id="常用正则表达式收集"><a href="#常用正则表达式收集" class="headerlink" title="常用正则表达式收集"></a>常用正则表达式收集</h2><p>参考项目：<a href="https://github.com/cdoco/common-regex" target="_blank" rel="noopener">https://github.com/cdoco/common-regex</a></p><h3 id="邮箱"><a href="#邮箱" class="headerlink" title="邮箱"></a>邮箱</h3><p><a href="mailto:`2362929771@qq.com" target="_blank" rel="noopener">`2362929771@qq.com</a>` 只允许英文字母、数字、下划线、英文句号、以及中划线组成</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[a-zA-Z0<span class="number">-9</span>_-]+@[a-zA-Z0<span class="number">-9</span>_-]+(\.[a-zA-Z0<span class="number">-9</span>_-]+)+$</span><br></pre></td></tr></table></figure><p><img src="5.png" alt></p><p><code>峰哥fenghlz@foxmail.com</code> 名称允许汉字、字母、数字，域名只允许英文域名</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[A-Za-z0<span class="number">-9</span>\u4e00-\u9fa5]+@[a-zA-Z0<span class="number">-9</span>_-]+(\.[a-zA-Z0<span class="number">-9</span>_-]+)+$</span><br></pre></td></tr></table></figure><p><img src="6.png" alt></p><h3 id="电话"><a href="#电话" class="headerlink" title="电话"></a>电话</h3><p><code>13245678990</code> 手机号</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^<span class="number">1</span>(<span class="number">3</span>|<span class="number">4</span>|<span class="number">5</span>|<span class="number">6</span>|<span class="number">7</span>|<span class="number">8</span>|<span class="number">9</span>)\d&#123;<span class="number">9</span>&#125;$</span><br></pre></td></tr></table></figure><p><img src="7.png" alt></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 随笔笔记 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Serverless 安全之依赖关系介绍</title>
       <link href="/passages/2019-11-29-Serverless-%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E4%BB%8B%E7%BB%8D/"/>
       <url>/passages/2019-11-29-Serverless-%E5%AE%89%E5%85%A8%E4%B9%8B%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E4%BB%8B%E7%BB%8D/</url>
