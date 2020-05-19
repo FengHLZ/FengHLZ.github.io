@@ -289,6 +289,901 @@
 </li>
 </ul>
 <h2 id="IP反查域名"><a href="#IP反查域名" class="headerlink" title="IP反查域名"></a>IP反查域名</h2><h3 id="在线查询网站-5"><a href="#在线查询网站-5" class="headerlink" title="在线查询网站"></a>在线查询网站</h3><h4 id="专业的IP地址库"><a href="#专业的IP地址库" class="headerlink" title="专业的IP地址库"></a>专业的IP地址库</h4><p><a href="https://tools.ipip.net/ipdomain.php" target="_blank" rel="noopener">https://tools.ipip.net/ipdomain.php</a></p>
+<h2 id="高风险主机服务Getshell漏洞列表"><a href="#高风险主机服务Getshell漏洞列表" class="headerlink" title="高风险主机服务Getshell漏洞列表"></a>高风险主机服务Getshell漏洞列表</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">id</th>
+<th style="text-align:left">软件名称</th>
+<th style="text-align:left">漏洞等级</th>
+<th style="text-align:left">默认端口</th>
+<th style="text-align:left">漏洞描述</th>
+<th style="text-align:left">远程探测</th>
+<th style="text-align:left">本地采集</th>
+<th style="text-align:left">漏洞风险</th>
+<th style="text-align:left">exp/poc/特征</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">activemq</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8161和61616</td>
+<td style="text-align:left">ActiveMQ unauthenticated RCE</td>
+<td style="text-align:left">开放8161端口和61616端口</td>
+<td style="text-align:left">开放8161端口和61616端口</td>
+<td style="text-align:left">上传webshell</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/activemq_upload.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/activemq_upload.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">activemq</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8161和61616</td>
+<td style="text-align:left">ActiveMQ任意文件写入漏洞 CVE-2016-3088</td>
+<td style="text-align:left">开放8161端口和61616端口</td>
+<td style="text-align:left">开放8161端口和61616端口</td>
+<td style="text-align:left">上传webshell</td>
+<td style="text-align:left"><a href="https://github.com/vulhub/vulhub/tree/master/activemq/CVE-2016-3088#activemq任意文件写入漏洞cve-2016-3088" target="_blank" rel="noopener">https://github.com/vulhub/vulhub/tree/master/activemq/CVE-2016-3088#activemq%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9Ecve-2016-3088</a></td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">axis2</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Axis2控制台弱口令</td>
+<td style="text-align:left">网站存在/axis2-admin目录</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">攻击者通过此漏洞可以登陆管理控制台，通过部署功能可直接获取服务器权限</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_axis.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_axis.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">axis2</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Axis2任意文件读取</td>
+<td style="text-align:left">网站存在/axis2-admin目录</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">通过此漏洞可以读取配置文件等信息，进而登陆控制台，通过部署功能可直接获取服务器权限</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/axis_config_read.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/axis_config_read.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">6</td>
+<td style="text-align:left">coldfusion</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8500</td>
+<td style="text-align:left">ColdFusion 反序列化漏洞（CVE-2017-3066）</td>
+<td style="text-align:left">开放8500端口</td>
+<td style="text-align:left">开放8500端口</td>
+<td style="text-align:left">任意代码执行</td>
+<td style="text-align:left"><a href="https://github.com/vulhub/vulhub/tree/master/coldfusion/CVE-2017-3066" target="_blank" rel="noopener">https://github.com/vulhub/vulhub/tree/master/coldfusion/CVE-2017-3066</a></td>
+</tr>
+<tr>
+<td style="text-align:left">9</td>
+<td style="text-align:left">docker</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">2375</td>
+<td style="text-align:left">docker daemon getshell</td>
+<td style="text-align:left">开放2375端口</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="http://www.dockerinfo.net/1416.html" target="_blank" rel="noopener">http://www.dockerinfo.net/1416.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">10</td>
+<td style="text-align:left">smb</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">445</td>
+<td style="text-align:left">eternalblue远程溢出</td>
+<td style="text-align:left">开放445端口</td>
+<td style="text-align:left">未打补丁，各系统对应补丁名在<a href="http://blog.51cto.com/hubuxcg/1925651" target="_blank" rel="noopener">http://blog.51cto.com/hubuxcg/1925651</a></td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/MS10-070.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/MS10-070.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">12</td>
+<td style="text-align:left">fastcgi</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">9000</td>
+<td style="text-align:left">fastcgi任意文件读取及远程任意代码执行</td>
+<td style="text-align:left">开放9000端口</td>
+<td style="text-align:left">开放9000端口</td>
+<td style="text-align:left">任意代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/fastcgi_rce.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/fastcgi_rce.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">14</td>
+<td style="text-align:left">glassfish</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">4848</td>
+<td style="text-align:left">Glassfish弱口令/任意文件读取</td>
+<td style="text-align:left">开放4848端口</td>
+<td style="text-align:left">开放4848端口</td>
+<td style="text-align:left">攻击者通过此漏洞可以登陆管理控制台，通过部署功能可直接获取服务器权限</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_glassfish.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_glassfish.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">17</td>
+<td style="text-align:left">java</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">1099</td>
+<td style="text-align:left">Java RMI 反序列化代码执行</td>
+<td style="text-align:left">开放1099端口</td>
+<td style="text-align:left">开放1099端口</td>
+<td style="text-align:left">任意代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/java_rmi_rce.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/java_rmi_rce.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">18</td>
+<td style="text-align:left">jboss</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Jboss 认证绕过</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">ps查看是否有jboss进程</td>
+<td style="text-align:left">上传webshell</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jboss_head.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jboss_head.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">19</td>
+<td style="text-align:left">jboss</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">jboss反序列化代码执行</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">ps查看是否有jboss进程</td>
+<td style="text-align:left">代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jboss_rce_un.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jboss_rce_un.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">20</td>
+<td style="text-align:left">jboss</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Jboss弱口令</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">ps查看是否有jboss进程</td>
+<td style="text-align:left">攻击者通过此漏洞可以登陆管理控制台，通过部署功能可直接获取服务器权限</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_jboss.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_jboss.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">21</td>
+<td style="text-align:left">jenkins</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Jenkins反序列化代码执行</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">ps -ef \</td>
+<td style="text-align:left">grep jenkins查看是否有jenkins进程</td>
+<td style="text-align:left">代码执行</td>
+<td><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jenkins_CVE_2015_8103.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jenkins_CVE_2015_8103.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">22</td>
+<td style="text-align:left">jenkins</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Jenkins-CLI反序列化代码执行</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">ps -ef \</td>
+<td style="text-align:left">grep jenkins查看是否有jenkins进程</td>
+<td style="text-align:left">代码执行</td>
+<td><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jenkins_CVE_2017_1000353.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/jenkins_CVE_2017_1000353.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">23</td>
+<td style="text-align:left">jenkins</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Jenkins控制台弱口令</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">ps -ef \</td>
+<td style="text-align:left">grep jenkins查看是否有jenkins进程</td>
+<td style="text-align:left">攻击者通过此漏洞可以访问查看项目代码信息，通过script功能可执行命令直接获取服务器权限</td>
+<td><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_jenkins.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_jenkins.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">26</td>
+<td style="text-align:left">mongodb</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">27017</td>
+<td style="text-align:left">MongoDB未授权访问</td>
+<td style="text-align:left">开放27017端口</td>
+<td style="text-align:left">开放27017端口</td>
+<td style="text-align:left">导致数据库敏感信息泄露</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_mongo.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_mongo.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">27</td>
+<td style="text-align:left">mysql</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">3306</td>
+<td style="text-align:left">mysql弱口令</td>
+<td style="text-align:left">开放3306端口</td>
+<td style="text-align:left">开放3306端口</td>
+<td style="text-align:left">导致数据库被控制，或导致代码执行</td>
+<td style="text-align:left">root:root,123456</td>
+</tr>
+<tr>
+<td style="text-align:left">28</td>
+<td style="text-align:left">mssql</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">1433</td>
+<td style="text-align:left">mssql弱口令</td>
+<td style="text-align:left">开放1433端口</td>
+<td style="text-align:left">开放1433端口</td>
+<td style="text-align:left">导致数据库被控制，或导致命令执行</td>
+<td style="text-align:left">sa:sa,123456</td>
+</tr>
+<tr>
+<td style="text-align:left">29</td>
+<td style="text-align:left">iis</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">80/443</td>
+<td style="text-align:left">Microsoft-IIS/6.0 RCE</td>
+<td style="text-align:left">GET请求目标网站,响应头中Server字段为iis</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/iis_webdav_rce.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/iis_webdav_rce.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">30</td>
+<td style="text-align:left">memcached</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">11211</td>
+<td style="text-align:left">Memcached未授权访问</td>
+<td style="text-align:left">开放11211端口</td>
+<td style="text-align:left">开放11211端口</td>
+<td style="text-align:left">导致数据库敏感信息泄露</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/memcache_unauth.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/memcache_unauth.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">31</td>
+<td style="text-align:left">nodejs</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">5858</td>
+<td style="text-align:left">Nodejs Debugger 远程代码执行漏洞</td>
+<td style="text-align:left">开放5858端口</td>
+<td style="text-align:left">开放5858端口</td>
+<td style="text-align:left">远程代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/nodejs_debugger_rce.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/nodejs_debugger_rce.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">36</td>
+<td style="text-align:left">resin</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">6800</td>
+<td style="text-align:left">Resin控制台弱口令</td>
+<td style="text-align:left">开放6800端口</td>
+<td style="text-align:left">开放6800端口</td>
+<td style="text-align:left">攻击者通过此漏洞可以登陆管理控制台，通过部署功能可直接获取服务器权限</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_resin.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_resin.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">39</td>
+<td style="text-align:left">redis</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">6379</td>
+<td style="text-align:left">redis未授权访问</td>
+<td style="text-align:left">开放6379端口</td>
+<td style="text-align:left">开放6379端口</td>
+<td style="text-align:left">在 Redis 服务器上写入公钥，进而可以使用对应私钥直接登录目标服务器</td>
+<td style="text-align:left"><a href="http://www.alloyteam.com/2017/07/12910/" target="_blank" rel="noopener">http://www.alloyteam.com/2017/07/12910/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">40</td>
+<td style="text-align:left">rdp</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">3389</td>
+<td style="text-align:left">windows rdp弱口令</td>
+<td style="text-align:left">开放3389端口</td>
+<td style="text-align:left">开放3389端口</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left">administrator:空/administrator:123456</td>
+</tr>
+<tr>
+<td style="text-align:left">41</td>
+<td style="text-align:left">smb</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">445</td>
+<td style="text-align:left">SMB弱口令</td>
+<td style="text-align:left">开放445端口</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_smb.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_smb.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">42</td>
+<td style="text-align:left">ssh</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">22</td>
+<td style="text-align:left">SSH弱口令</td>
+<td style="text-align:left">开放22端口</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left">root:公司常用默认密码</td>
+</tr>
+<tr>
+<td style="text-align:left">43</td>
+<td style="text-align:left">supervisor</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">9001</td>
+<td style="text-align:left">Supervisor 接口未授权访问</td>
+<td style="text-align:left">开放9001端口</td>
+<td style="text-align:left">开放9001端口</td>
+<td style="text-align:left">远程代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_supervisor_web.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_supervisor_web.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">49</td>
+<td style="text-align:left">solr</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">8983</td>
+<td style="text-align:left">solr后台</td>
+<td style="text-align:left">开放8983端口</td>
+<td style="text-align:left">开放8983端口</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left">默认没有权限控制，目录/solr     <a href="https://www.jianshu.com/p/d5ba03ab747d" target="_blank" rel="noopener">https://www.jianshu.com/p/d5ba03ab747d</a>     <a href="http://www.hackdig.com/10/hack-49632.htm" target="_blank" rel="noopener">http://www.hackdig.com/10/hack-49632.htm</a></td>
+</tr>
+<tr>
+<td style="text-align:left">51</td>
+<td style="text-align:left">tomcat</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Tomcat 任意写文件漏洞</td>
+<td style="text-align:left">cms指纹识别为tomcat</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">任意代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/tomcat_cve_017_12615.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/tomcat_cve_017_12615.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">52</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">8080</td>
+<td style="text-align:left">Tomcat弱口令</td>
+<td style="text-align:left">cms指纹识别为tomcat</td>
+<td style="text-align:left">无</td>
+<td style="text-align:left">上传webshell</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/tomcat_crackpass.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/tomcat_crackpass.py</a></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">58</td>
+<td style="text-align:left">weblogic</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">7001</td>
+<td style="text-align:left">Weblogic弱口令</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">攻击者通过此漏洞可以登陆管理控制台，通过部署功能可直接获取服务器权限</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_weblogic.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/crack_weblogic.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">59</td>
+<td style="text-align:left">weblogic</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">7001</td>
+<td style="text-align:left">Weblogic RCE CVE-2017-3506 &amp;&amp; CVE-2017-10271</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">远程代码执行</td>
+<td style="text-align:left"><a href="https://www.secfree.com/article-635.html" target="_blank" rel="noopener">https://www.secfree.com/article-635.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">60</td>
+<td style="text-align:left">weblogic</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">7001</td>
+<td style="text-align:left">WebLogic WLS Security组件反序列化代码执行</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">远程代码执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/weblogic_CVE_2015_4852.py cve-2018-2628---&gt;http:/www.freebuf.com/vuls/16" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/weblogic_CVE_2015_4852.py       cve-2018-2628—&gt;http://www.freebuf.com/vuls/16</a></td>
+</tr>
+<tr>
+<td style="text-align:left">61</td>
+<td style="text-align:left">weblogic</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">7001</td>
+<td style="text-align:left">WebLogic WLS RCE CVE-2017-10271</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">开放7001端口</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/weblogic_CVE_2017_10271.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/weblogic_CVE_2017_10271.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">62</td>
+<td style="text-align:left">zabbix</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">10051</td>
+<td style="text-align:left">zabbix弱口令</td>
+<td style="text-align:left">开放10051端口</td>
+<td style="text-align:left">开放10051端口</td>
+<td style="text-align:left">弱口令敏感信息泄露</td>
+<td style="text-align:left">/zabbix目录   admin:zabbix</td>
+</tr>
+<tr>
+<td style="text-align:left">63</td>
+<td style="text-align:left">zabbix</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">10051</td>
+<td style="text-align:left">zabbix jsrpc SQL注入</td>
+<td style="text-align:left">开放10051端口</td>
+<td style="text-align:left">开放10051端口</td>
+<td style="text-align:left">弱口令导致命令执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/zabbix_jsrpc_SQL.json" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/zabbix_jsrpc_SQL.json</a></td>
+</tr>
+<tr>
+<td style="text-align:left">64</td>
+<td style="text-align:left">zabbix</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">10051</td>
+<td style="text-align:left">Zabbix latest SQL注入</td>
+<td style="text-align:left">开放10051端口</td>
+<td style="text-align:left">开放10051端口</td>
+<td style="text-align:left">sqli导致命令执行</td>
+<td style="text-align:left"><a href="https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/zabbix_latest_sql.py" target="_blank" rel="noopener">https://github.com/ysrc/xunfeng/blob/master/vulscan/vuldb/zabbix_latest_sql.py</a></td>
+</tr>
+<tr>
+<td style="text-align:left">65</td>
+<td style="text-align:left">zenoss</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">8003</td>
+<td style="text-align:left">zenoss弱口令</td>
+<td style="text-align:left">开放8003端口</td>
+<td style="text-align:left">开放8003端口</td>
+<td style="text-align:left">弱口令敏感信息泄露</td>
+<td style="text-align:left">root:空密码，zenoss:空密码 <a href="http://blog.51cto.com/jack594/68498" target="_blank" rel="noopener">http://blog.51cto.com/jack594/68498</a></td>
+</tr>
+<tr>
+<td style="text-align:left">66</td>
+<td style="text-align:left">zebra</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">2601/2604</td>
+<td style="text-align:left">zebra弱口令</td>
+<td style="text-align:left">开放2601端口</td>
+<td style="text-align:left">开放2601端口</td>
+<td style="text-align:left">弱口令导致路由器被控制</td>
+<td style="text-align:left"><a href="https://default-password.info/zebra/,默认密码zebra" target="_blank" rel="noopener">https://default-password.info/zebra/,默认密码zebra</a></td>
+</tr>
+<tr>
+<td style="text-align:left">67</td>
+<td style="text-align:left">rundeck</td>
+<td style="text-align:left">高危</td>
+<td style="text-align:left">4440</td>
+<td style="text-align:left">rundeck弱口令</td>
+<td style="text-align:left">开放4440端口</td>
+<td style="text-align:left">开放4440端口</td>
+<td style="text-align:left">默认弱口令导致命令执行</td>
+<td style="text-align:left"><a href="https://www.secpulse.com/archives/29500.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/29500.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">68</td>
+<td style="text-align:left">ElasticSearch</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">9200</td>
+<td style="text-align:left">ElasticSearch命令执行</td>
+<td style="text-align:left">开放9200端口</td>
+<td style="text-align:left">开放9200端口</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="https://www.secpulse.com/archives/23704.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/23704.html      https://www.debugrun.com/a/UtNWuSb.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">69</td>
+<td style="text-align:left">SAP</td>
+<td style="text-align:left">严重</td>
+<td style="text-align:left">50000</td>
+<td style="text-align:left">SAP命令执行</td>
+<td style="text-align:left">开放50000端口</td>
+<td style="text-align:left">开放50000端口</td>
+<td style="text-align:left">远程命令执行</td>
+<td style="text-align:left"><a href="https://www.secpulse.com/archives/43387.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/43387.html</a>     <a href="https://www.secpulse.com/archives/43437.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/43437.html</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="常见安全设备默认口令清单"><a href="#常见安全设备默认口令清单" class="headerlink" title="常见安全设备默认口令清单"></a>常见安全设备默认口令清单</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">设备</th>
+<th style="text-align:left">默认账号</th>
+<th style="text-align:left">默认密码</th>
+<th style="text-align:left">地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">深信服产品</td>
+<td style="text-align:left">sangfor</td>
+<td style="text-align:left">sangfor     sangfor@2018     sangfor@2019</td>
+<td style="text-align:left">无</td>
+</tr>
+<tr>
+<td style="text-align:left">深信服科技 AD</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">dlanrecover</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/d49d55d77cd184254a353566.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/d49d55d77cd184254a353566.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服负载均衡 AD 3.6</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/d51282d1da38376baf1fae95.html?rec_flag=default&amp;sxts=1534472792809" target="_blank" rel="noopener">https://wenku.baidu.com/view/d51282d1da38376baf1fae95.html?rec_flag=default&amp;sxts=1534472792809</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服WAC ( WNS  V2.6)</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/c2a8db5b680203d8cf2f2424.html?rec_flag=default&amp;sxts=1534472907362" target="_blank" rel="noopener">https://wenku.baidu.com/view/c2a8db5b680203d8cf2f2424.html?rec_flag=default&amp;sxts=1534472907362</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服VPN</td>
+<td style="text-align:left">Admin</td>
+<td style="text-align:left">Admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/5a470bbf6394dd88d0d233d4b14e852458fb39b9.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/5a470bbf6394dd88d0d233d4b14e852458fb39b9.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服ipsec-VPN  (SSL 5.5)</td>
+<td style="text-align:left">Admin</td>
+<td style="text-align:left">Admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/323c2532dcccda38376baf1ffc4ffe473368fd20.html?rec_flag=default" target="_blank" rel="noopener">https://wenku.baidu.com/view/323c2532dcccda38376baf1ffc4ffe473368fd20.html?rec_flag=default</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服AC6.0</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/a864ecbe89eb172ded63b7c2.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/a864ecbe89eb172ded63b7c2.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">SANGFOR防火墙</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">sangfor</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/4ae97cd0240c844769eaee95.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/4ae97cd0240c844769eaee95.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服AF(NGAF  V2.2)</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">sangfor</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/cf5565d1195f312b3169a554.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/cf5565d1195f312b3169a554.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服NGAF下一代应用防火墙(NGAF  V4.3)</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/2b866bdb6137ee06eff918a3.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/2b866bdb6137ee06eff918a3.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服AD3.9</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/9653b377f242336c1eb95e85.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/9653b377f242336c1eb95e85.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">深信服上网行为管理设备数据中心</td>
+<td style="text-align:left">Admin</td>
+<td style="text-align:left">密码为空</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/7637dd0cbb68a98271fefad7.html" target="_blank" rel="noopener">https://wenku.baidu.com/view/7637dd0cbb68a98271fefad7.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">SANGFOR_AD_v5.1</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/6f72f90227284b73f24250df.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/6f72f90227284b73f24250df.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网御漏洞扫描系统</td>
+<td style="text-align:left">leadsec</td>
+<td style="text-align:left">leadsec</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/be1f7e6ccc22bcd127ff0cdd.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/be1f7e6ccc22bcd127ff0cdd.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">天阗入侵检测与管理系统  V7.0</td>
+<td style="text-align:left">Admin<br>Audit<br>adm</td>
+<td style="text-align:left">venus70<br>venus70<br>venus70</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/e7107e74844769eae109ed39.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/e7107e74844769eae109ed39.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">天阗入侵检测与管理系统  V6.0</td>
+<td style="text-align:left">Admin<br>Audit<br>adm</td>
+<td style="text-align:left">venus60<br>venus60<br>venus60</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/8caa3ba70029bd64783e2c78.html" target="_blank" rel="noopener">https://wenku.baidu.com/view/8caa3ba70029bd64783e2c78.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网御WAF集中控制中心(V3.0R5.0)</td>
+<td style="text-align:left">admin<br>audit<br>adm</td>
+<td style="text-align:left">leadsec.waf<br>leadsec.waf<br>leadsec.waf</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/727bb848ce2f0066f433220c.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/727bb848ce2f0066f433220c.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">联想网御</td>
+<td style="text-align:left">administrator</td>
+<td style="text-align:left">administrator</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/14bcd443a8956bec0975e342.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/14bcd443a8956bec0975e342.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网御事件服务器</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin123</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/aa5ca32ce2bd960590c677b7.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/aa5ca32ce2bd960590c677b7.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">联想网御防火墙PowerV</td>
+<td style="text-align:left">administrator</td>
+<td style="text-align:left">administrator</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/96a954d9a58da0116c17498f.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/96a954d9a58da0116c17498f.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">联想网御入侵检测系统</td>
+<td style="text-align:left">lenovo</td>
+<td style="text-align:left">default</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/d1f0c2f4c8d376eeaeaa31cb.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/d1f0c2f4c8d376eeaeaa31cb.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网络卫士入侵检测系统</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">talent</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/e36a04ebf8c75fbfc77db279.html" target="_blank" rel="noopener">https://wenku.baidu.com/view/e36a04ebf8c75fbfc77db279.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网御入侵检测系统V3.2.72.0</td>
+<td style="text-align:left">adm <br>admin</td>
+<td style="text-align:left">leadsec32<br>leadsec32</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/76acf47d941ea76e58fa04df.html?pn=51" target="_blank" rel="noopener">https://wenku.baidu.com/view/76acf47d941ea76e58fa04df.html?pn=51</a></td>
+</tr>
+<tr>
+<td style="text-align:left">联想网御入侵检测系统IDS</td>
+<td style="text-align:left">root<br>admin</td>
+<td style="text-align:left">111111<br>admin123</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/a25a791a964bcf84b9d57b1f.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/a25a791a964bcf84b9d57b1f.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">科来网络回溯分析系统</td>
+<td style="text-align:left">csadmin</td>
+<td style="text-align:left">colasoft</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/8e28f1bd1a37f111f1855b4c.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/8e28f1bd1a37f111f1855b4c.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">中控考勤机web3.0</td>
+<td style="text-align:left">administrator</td>
+<td style="text-align:left">123456</td>
+<td style="text-align:left"><a href="http://fly5i0.blog.163.com/blog/static/1792263520147209124336/" target="_blank" rel="noopener">http://fly5i0.blog.163.com/blog/static/1792263520147209124336/</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C iMC</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/1b4ca26fc281e53a5802ff95.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/1b4ca26fc281e53a5802ff95.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C SecPath系列</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/e11277dc6f1aff00bed51e02.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/e11277dc6f1aff00bed51e02.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C S5120-SI</td>
+<td style="text-align:left">test</td>
+<td style="text-align:left">123</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/681885b0580216fc710afd21.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/681885b0580216fc710afd21.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C智能管理中心</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/5da0fe3167ec102de3bd8904.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/5da0fe3167ec102de3bd8904.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C ER3100</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin/adminer/adminer3100</td>
+<td style="text-align:left"><a href="http://ask.zol.com.cn/q/483664.html" target="_blank" rel="noopener">http://ask.zol.com.cn/q/483664.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C ER3200</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin/adminer/adminer3200</td>
+<td style="text-align:left"><a href="http://ask.zol.com.cn/q/483664.html" target="_blank" rel="noopener">http://ask.zol.com.cn/q/483664.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C ER3260</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin/adminer/adminer3260</td>
+<td style="text-align:left"><a href="http://ask.zol.com.cn/q/483664.html" target="_blank" rel="noopener">http://ask.zol.com.cn/q/483664.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">H3C</td>
+<td style="text-align:left">admin<br>admin<br>admin<br>h3c</td>
+<td style="text-align:left">adminer<br>admin<br>h3capadmin<br>h3c</td>
+<td style="text-align:left"><a href="https://zhidao.baidu.com/question/586375100.html" target="_blank" rel="noopener">https://zhidao.baidu.com/question/586375100.html</a><br><a href="https://zhidao.baidu.com/question/459367504.html" target="_blank" rel="noopener">https://zhidao.baidu.com/question/459367504.html</a></td>
+</tr>
+<tr>
+<td style="text-align:left">360天擎</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/a9fa0d28700abb68a882fbc8.html?rec_flag=default" target="_blank" rel="noopener">https://wenku.baidu.com/view/a9fa0d28700abb68a882fbc8.html?rec_flag=default</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网神防火墙</td>
+<td style="text-align:left">firewall</td>
+<td style="text-align:left">firewall</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/41b224eb69dc5022aaea00a6.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/41b224eb69dc5022aaea00a6.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">天融信防火墙NGFW4000</td>
+<td style="text-align:left">superman</td>
+<td style="text-align:left">talent</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/252e6b6baf1ffc4ffe47ac12.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/252e6b6baf1ffc4ffe47ac12.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">黑盾防火墙</td>
+<td style="text-align:left">admin<br>rule<br>audit</td>
+<td style="text-align:left">admin<br>abc123<br>abc123</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/effc2a3bb7360b4c2e3f642b.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/effc2a3bb7360b4c2e3f642b.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">华为防火墙</td>
+<td style="text-align:left">telnetuser<br>ftpuser</td>
+<td style="text-align:left">telnetpwd<br>ftppwd</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/7250fa44b307e87101f69677.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/7250fa44b307e87101f69677.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">方正防火墙</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/734be3bec77da26925c5b08b.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/734be3bec77da26925c5b08b.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">飞塔防火墙</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">密码为空</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/0e9d6d199b6648d7c1c746cf.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/0e9d6d199b6648d7c1c746cf.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Juniper_SSG__5防火墙</td>
+<td style="text-align:left">netscreen</td>
+<td style="text-align:left">netscreen</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/a267a8283169a4517723a339.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/a267a8283169a4517723a339.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">中新金盾硬件防火墙</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">123</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/6dcfc613f18583d0496459ff.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/6dcfc613f18583d0496459ff.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">kill防火墙(冠群金辰)</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">sys123</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/18a0d76d915f804d2b16c1ad.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/18a0d76d915f804d2b16c1ad.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">天清汉马USG防火墙</td>
+<td style="text-align:left">admin<br>Audit<br>useradmin</td>
+<td style="text-align:left">venus.fw<br>venus.audit<br>venus.user</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/4aa023dcfad6195f302ba612.html?rec_flag=default" target="_blank" rel="noopener">https://wenku.baidu.com/view/4aa023dcfad6195f302ba612.html?rec_flag=default</a></td>
+</tr>
+<tr>
+<td style="text-align:left">阿姆瑞特防火墙</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">manager</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/549d9b056c85ec3a87c2c5b1.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/549d9b056c85ec3a87c2c5b1.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">山石网科</td>
+<td style="text-align:left">hillstone</td>
+<td style="text-align:left">hillstone</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/c65e1d70964bcf84b9d57b79.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/c65e1d70964bcf84b9d57b79.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">绿盟安全审计系统</td>
+<td style="text-align:left">weboper<br>webaudit<br>conadmin<br>admin<br>shell</td>
+<td style="text-align:left">weboper<br>webaudit<br>conadmin<br>admin<br>shell</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/9ea7837802020740be1e9bfa.html?from=search&amp;pn=51" target="_blank" rel="noopener">https://wenku.baidu.com/view/9ea7837802020740be1e9bfa.html?from=search&amp;pn=51</a></td>
+</tr>
+<tr>
+<td style="text-align:left">绿盟产品</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">nsfocus123</td>
+<td style="text-align:left">无</td>
+</tr>
+<tr>
+<td style="text-align:left">TopAudit日志审计系统</td>
+<td style="text-align:left">superman</td>
+<td style="text-align:left">talent</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/b851120d192e45361066f5a3.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/b851120d192e45361066f5a3.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">LogBase日志管理综合审计系统</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">safetybase</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/13ef6672dd36a32d737581a1.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/13ef6672dd36a32d737581a1.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网神SecFox运维安全管理与审计系统</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">!1fw@2soc#3vpn</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/b9c94946f342336c1eb91a37f111f18582d00c47.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/b9c94946f342336c1eb91a37f111f18582d00c47.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">天融信数据库审计系统</td>
+<td style="text-align:left">superman</td>
+<td style="text-align:left">telent</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/8b059289fab069dc502201db.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/8b059289fab069dc502201db.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Hillstone安全审计平台</td>
+<td style="text-align:left">hillstone</td>
+<td style="text-align:left">hillstone</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/c4d4663c941ea76e58fa04f4.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/c4d4663c941ea76e58fa04f4.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网康日志中心</td>
+<td style="text-align:left">ns25000</td>
+<td style="text-align:left">ns25000</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/dca28ba50029bd64783e2c7d.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/dca28ba50029bd64783e2c7d.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">网络安全审计系统（中科新业）</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">123456</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/cfbb6b7b10661ed9ad51f3e6.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/cfbb6b7b10661ed9ad51f3e6.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">天玥网络安全审计系统</td>
+<td style="text-align:left">Admin</td>
+<td style="text-align:left">cyberaudit</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/90fda2bafd0a79563c1e723a.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/90fda2bafd0a79563c1e723a.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">明御WEB应用防火墙</td>
+<td style="text-align:left">admin<br>admin</td>
+<td style="text-align:left">admin<br>adminadmin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/62433486ec3a87c24028c457.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/62433486ec3a87c24028c457.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">明御攻防实验室平台</td>
+<td style="text-align:left">root</td>
+<td style="text-align:left">123456</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/909e0504c8d376eeafaa31a0.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/909e0504c8d376eeafaa31a0.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">明御安全网关</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">adminadmin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/e5b065e5ba4cf7ec4afe04a1b0717fd5360cb2f4.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/e5b065e5ba4cf7ec4afe04a1b0717fd5360cb2f4.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">明御运维审计与册风险控制系统</td>
+<td style="text-align:left">admin<br>system<br>auditor<br>operator</td>
+<td style="text-align:left">1q2w3e<br>1q2w3e4r<br>1q2w3e4r<br>1q2w3e4r</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/feb2c39f19e8b8f67c1cb9ac.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/feb2c39f19e8b8f67c1cb9ac.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">明御网站卫士</td>
+<td style="text-align:left">sysmanager</td>
+<td style="text-align:left">sysmanager888</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/4bbd761fb7360b4c2e3f644d.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/4bbd761fb7360b4c2e3f644d.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">亿邮邮件网关</td>
+<td style="text-align:left">eyouuser<br>eyougw<br>admin<br>admin</td>
+<td style="text-align:left">eyou_admin<br>admin@(eyou)<br>+-ccccc<br>cyouadmin</td>
+<td style="text-align:left"><a href="https://www.secpulse.com/archives/32306.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/32306.html</a><br><a href="https://wenku.baidu.com/view/2fec883467ec102de2bd89b7.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/2fec883467ec102de2bd89b7.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">Websense邮件安全网关</td>
+<td style="text-align:left">administrator</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/ee4f76d0c1c708a1284a4435.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/ee4f76d0c1c708a1284a4435.html?from=search</a></td>
+</tr>
+<tr>
+<td style="text-align:left">梭子鱼邮件存储网关</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left">admin</td>
+<td style="text-align:left"><a href="https://wenku.baidu.com/view/afcf3447336c1eb91a375dc7.html?from=search" target="_blank" rel="noopener">https://wenku.baidu.com/view/afcf3447336c1eb91a375dc7.html?from=search</a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="相关项目"><a href="#相关项目" class="headerlink" title="相关项目"></a>相关项目</h2><p><a href="https://github.com/Qftm/Information_Collection_Handbook" target="_blank" rel="noopener">Information_Collection_Handbook</a></p>
   </article>
   <aside class="table-content" id="site-toc">
@@ -297,7 +1192,7 @@
     <span>目录</span>
   </div>
   <div class="table-content-main">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#whois查询"><span class="toc-text">whois查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#whois是什么"><span class="toc-text">whois是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#whois可以查询什么信息"><span class="toc-text">whois可以查询什么信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#bugscaner-whois"><span class="toc-text">bugscaner-whois</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#阿里"><span class="toc-text">阿里</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全球查"><span class="toc-text">全球查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#爱站"><span class="toc-text">爱站</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#站长"><span class="toc-text">站长</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kali自带工具"><span class="toc-text">kali自带工具</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备案信息查询"><span class="toc-text">备案信息查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-1"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ICP备案查询网"><span class="toc-text">ICP备案查询网</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#天眼查"><span class="toc-text">天眼查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#工信部"><span class="toc-text">工信部</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#子域名收集"><span class="toc-text">子域名收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-2"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#云悉资产"><span class="toc-text">云悉资产</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线二级域名子域名查询"><span class="toc-text">在线二级域名子域名查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线子域名爆破"><span class="toc-text">在线子域名爆破</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DNSdumpster"><span class="toc-text">DNSdumpster</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过证书查找子域名（Crt-sh）"><span class="toc-text">通过证书查找子域名（Crt.sh）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过证书查找子域名（censys）"><span class="toc-text">通过证书查找子域名（censys）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Google"><span class="toc-text">Google</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工具"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Layer子域名挖掘机"><span class="toc-text">Layer子域名挖掘机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sublist3r"><span class="toc-text">Sublist3r</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web指纹查询"><span class="toc-text">Web指纹查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-3"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#云悉指纹"><span class="toc-text">云悉指纹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线CMS指纹识别"><span class="toc-text">在线CMS指纹识别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#火狐插件-Wappalyzer"><span class="toc-text">火狐插件-Wappalyzer</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工具-1"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#whatweb"><span class="toc-text">whatweb</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口指纹搜集"><span class="toc-text">端口指纹搜集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-4"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#在线端口检测"><span class="toc-text">在线端口检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线端口扫描"><span class="toc-text">在线端口扫描</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工具-2"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#masscan"><span class="toc-text">masscan</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nmap"><span class="toc-text">nmap</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见端口漏洞"><span class="toc-text">常见端口漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#敏感目录"><span class="toc-text">敏感目录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#工具-3"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#御剑"><span class="toc-text">御剑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dirsearch"><span class="toc-text">dirsearch</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#敏感信息-网络空间资产搜索"><span class="toc-text">敏感信息-网络空间资产搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Google-hacking语法"><span class="toc-text">Google hacking语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GitHub上的敏感信息"><span class="toc-text">GitHub上的敏感信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#（1）-基本搜索（Basic-search）"><span class="toc-text">（1） 基本搜索（Basic search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（2）-仓库搜索（Repository-search）"><span class="toc-text">（2） 仓库搜索（Repository search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（3）-代码搜索（Code-search）"><span class="toc-text">（3） 代码搜索（Code search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（4）-问题搜索（Issue-search）"><span class="toc-text">（4） 问题搜索（Issue search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（5）-用户名搜索（User-search）"><span class="toc-text">（5） 用户名搜索（User search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（6）-高级搜索（Advanced-search）"><span class="toc-text">（6） 高级搜索（Advanced search）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#真实IP"><span class="toc-text">真实IP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#判断是否使用了CDN"><span class="toc-text">判断是否使用了CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#全球ping检测"><span class="toc-text">全球ping检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#域名解析记录"><span class="toc-text">域名解析记录</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绕过CDN查询真实IP"><span class="toc-text">绕过CDN查询真实IP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#VirusTotal"><span class="toc-text">VirusTotal</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他方法"><span class="toc-text">其他方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP反查域名"><span class="toc-text">IP反查域名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-5"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#专业的IP地址库"><span class="toc-text">专业的IP地址库</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关项目"><span class="toc-text">相关项目</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#whois查询"><span class="toc-text">whois查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#whois是什么"><span class="toc-text">whois是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#whois可以查询什么信息"><span class="toc-text">whois可以查询什么信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#bugscaner-whois"><span class="toc-text">bugscaner-whois</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#阿里"><span class="toc-text">阿里</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全球查"><span class="toc-text">全球查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#爱站"><span class="toc-text">爱站</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#站长"><span class="toc-text">站长</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kali自带工具"><span class="toc-text">kali自带工具</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#备案信息查询"><span class="toc-text">备案信息查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-1"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ICP备案查询网"><span class="toc-text">ICP备案查询网</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#天眼查"><span class="toc-text">天眼查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#工信部"><span class="toc-text">工信部</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#子域名收集"><span class="toc-text">子域名收集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-2"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#云悉资产"><span class="toc-text">云悉资产</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线二级域名子域名查询"><span class="toc-text">在线二级域名子域名查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线子域名爆破"><span class="toc-text">在线子域名爆破</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DNSdumpster"><span class="toc-text">DNSdumpster</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过证书查找子域名（Crt-sh）"><span class="toc-text">通过证书查找子域名（Crt.sh）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过证书查找子域名（censys）"><span class="toc-text">通过证书查找子域名（censys）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Google"><span class="toc-text">Google</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工具"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Layer子域名挖掘机"><span class="toc-text">Layer子域名挖掘机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sublist3r"><span class="toc-text">Sublist3r</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web指纹查询"><span class="toc-text">Web指纹查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-3"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#云悉指纹"><span class="toc-text">云悉指纹</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线CMS指纹识别"><span class="toc-text">在线CMS指纹识别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#火狐插件-Wappalyzer"><span class="toc-text">火狐插件-Wappalyzer</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工具-1"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#whatweb"><span class="toc-text">whatweb</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#端口指纹搜集"><span class="toc-text">端口指纹搜集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-4"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#在线端口检测"><span class="toc-text">在线端口检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在线端口扫描"><span class="toc-text">在线端口扫描</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#工具-2"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#masscan"><span class="toc-text">masscan</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#nmap"><span class="toc-text">nmap</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见端口漏洞"><span class="toc-text">常见端口漏洞</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#敏感目录"><span class="toc-text">敏感目录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#工具-3"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#御剑"><span class="toc-text">御剑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#dirsearch"><span class="toc-text">dirsearch</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#敏感信息-网络空间资产搜索"><span class="toc-text">敏感信息-网络空间资产搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Google-hacking语法"><span class="toc-text">Google hacking语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#GitHub上的敏感信息"><span class="toc-text">GitHub上的敏感信息</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#（1）-基本搜索（Basic-search）"><span class="toc-text">（1） 基本搜索（Basic search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（2）-仓库搜索（Repository-search）"><span class="toc-text">（2） 仓库搜索（Repository search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（3）-代码搜索（Code-search）"><span class="toc-text">（3） 代码搜索（Code search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（4）-问题搜索（Issue-search）"><span class="toc-text">（4） 问题搜索（Issue search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（5）-用户名搜索（User-search）"><span class="toc-text">（5） 用户名搜索（User search）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（6）-高级搜索（Advanced-search）"><span class="toc-text">（6） 高级搜索（Advanced search）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#真实IP"><span class="toc-text">真实IP</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#判断是否使用了CDN"><span class="toc-text">判断是否使用了CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#全球ping检测"><span class="toc-text">全球ping检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#域名解析记录"><span class="toc-text">域名解析记录</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#绕过CDN查询真实IP"><span class="toc-text">绕过CDN查询真实IP</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#VirusTotal"><span class="toc-text">VirusTotal</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他方法"><span class="toc-text">其他方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#IP反查域名"><span class="toc-text">IP反查域名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#在线查询网站-5"><span class="toc-text">在线查询网站</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#专业的IP地址库"><span class="toc-text">专业的IP地址库</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高风险主机服务Getshell漏洞列表"><span class="toc-text">高风险主机服务Getshell漏洞列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常见安全设备默认口令清单"><span class="toc-text">常见安全设备默认口令清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关项目"><span class="toc-text">相关项目</span></a></li></ol>
   </div>
 </aside>
   

